@@ -1,0 +1,16 @@
+# This file should parse without error.
+# 99 Bottles of Beer.
+
+bottles := 99
+
+verse := -> (n) {
+  +(+(+(+(to-str(n), ' bottles of beer on the wall'),
+      +(to-str(n), ' bottles of beer')),
+      +(to-str(n), ' take one down, pass it around')),
+      +(to-str(-(n, 1)), ' bottles of beer on the wall'))
+}
+
+while >(0, bottles) do
+  verse(bottles)
+  bottles := -(bottles, 1)
+end

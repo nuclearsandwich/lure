@@ -1,0 +1,47 @@
+(* EBNF of Lure *)
+
+Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9 ;
+
+CommentLine = "#", {? any character except a newline ?}, "\n" ;
+
+Number = Digit, {Digit} ;
+
+Expression = AssignmentExpression | ConditionalExpression | LoopExpression | Identifier | Number | String ;
+
+AssignmentExpression = Identifier, ":=", Expression ;
+
+Identifier = LeadingIdentifierCharacter, {IdentifierCharacter} ;
+
+LeadingIdentifierCharacter = ? any letter either case or an underscore ? ;
+
+IdentifierCharacter = LeadingIdentifierCharacter | Digit ;
+
+String = "'", {StringCharacter}, "'"
+
+StringCharacter = ? any character other than ' ? ;
+
+Script = Expression, {Expression} ;
+
+ConditionalExpression = "if", Expression, "then", Expression, [ "else", Expression ], "end" ;
+
+LoopExpression = "loop", "do", LoopInteriorExpression, "end" ;
+
+LoopInteriorExpression = BreakExpression | Expression ;
+
+(* TODO: Pending stateful parser *)
+BreakExpression = "break", "(", Expression, ")" ;
+
+WhileExpression = "while", Expression, "do", {LoopInteriorExpression}, "end" ;
+
+FunctionLiteralExpression = FunctionStart, ArgumentList, "{", {FunctionInteriorExpression}, "}" ;
+
+FunctionStart = "fn" | "fun" | "func" | "function" | "->" ;
+
+ArgumentList = "(", {Identifer}, ")" ;
+
+FunctionInteriorExpression = ReturnExpression | Expression ;
+
+(* TODO: Pending stateful parser *)
+ReturnExpression = "return", "(", Expression, ")" ;
+
+FunctionInvocationExpression = Identifier, "(", {Expression}, ")" ;

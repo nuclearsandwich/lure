@@ -1,0 +1,212 @@
+options {
+  JJTREE_OUTPUT_DIRECTORY="src/forkbomb/frontend/parser";
+  OUTPUT_DIRECTORY="src/forkbomb/frontend/parser";
+  NODE_EXTENDS="forkbomb.intermediate.icodeimpl.ICodeNodeImpl";
+  VISITOR=true;
+}
+
+PARSER_BEGIN(LureParser)
+  package forkbomb.frontend.parser;
+
+  import forkbomb.intermediate.*;
+  import forkbomb.intermediate.symtabimpl.*;
+  import forkbomb.util.*;
+
+  import static forkbomb.intermediate.symtabimpl.SymTabKeyImpl.*;
+  import static forkbomb.intermediate.symtabimpl.DefinitionImpl.*;
+  import static forkbomb.intermediate.symtabimpl.SymTabKeyImpl.*;
+  import static forkbomb.intermediate.icodeimpl.ICodeKeyImpl.*;
+
+  public class LureParser {
+
+   private static final String SOURCE_SUFFIX = ".lure";
+   private static final String OUTPUT_SUFFIX = ".j";
+
+    private static SymTabStack symTabStack;
+    private static SymTabEntry programId;
+
+    private static boolean noisy = false;
+    public static void main(String[] args) {
+      try {
+      // Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+
+    //lure parser
+        LureParser parser = new LureParser(new java.io.FileInputStream(args[0]));
+        SimpleNode script = parser.Script();
+        script.dump(">");
+
+    //cross-reference table.
+        CrossReferencer crossReferencer = new CrossReferencer();
+        crossReferencer.print(symTabStack);
+      }
+      catch (ParseException e) { e.printStackTrace(); }
+      catch (java.io.FileNotFoundException e) {
+        System.err.println("Input file " + args[0] + " not found.");
+      }
+    }
+
+    private static void visit(String construct) {
+      if (noisy) {
+        for (int i = 0; i <= nesting; i++) System.out.print("  ");
+        System.out.println(construct + ": Visiting");
+      }
+    }
+
+    private static void enter(String construct) {
+      if (noisy) {
+        for (int i = 0; i <= nesting; i++) System.out.print("  ");
+        System.out.println(construct + ": Entering");
+        nesting++;
+      }
+    }
+    private static void leave(String construct) {
+      if (noisy) {
+        for (int i = 0; i <= nesting; i++) System.out.print("  ");
+        System.out.println(construct + ": Leaving");
+        nesting--;
+      }
+    }
+    private static int nesting = 0;
+  }
+PARSER_END(LureParser)
+
+SKIP : {
+  <IGNORE: [" "]>
+| <NEWLINE : "\n">
+| <LINECOMMENT: "#" (~["\n"])* "\n">
+}
+
+// Keywords
+TOKEN: {
+  <END        : "end">
+| <IF         : "if">
+| <THEN       : "then">
+| <ELSE       : "else">
+| <LOOP       : "loop">
+| <WHILE      : "while">
+| <DO         : "do">
+| <BREAK      : "break">
+| <ASSIGN     : ":=">
+// Function Synonyms
+| <FN         : "fn">
+| <FUN        : "fun">
+| <FUNC       : "func">
+| <FUNCTION   : "function">
+| <STAB       : "->">
+}
+
+// Literals
+TOKEN : {
+  <NUMBER     : (<DIGIT>)+>
+| <DIGIT      : ["0" - "9"]>
+| <QUOTE      : "'"> : STRING_STATE
+}
+
+// Identifiers
+TOKEN: {
+  <IDENTIFIER : ["a" - "z", "A" - "Z", "_", "=", "+", "-", "*", "?", "$", "%", ">", "<"] ( ["a" - "z", "A" - "Z", "0" - "9", "_", "=", "+", "-", "*", "?", "$", "%", ">", "<"] )*>
+}
+
+<STRING_STATE> TOKEN:
+{
+  <STRING_CHAR: ~["'"]>
+| <ENDQUOTE : <QUOTE>> : DEFAULT
+}
+
+SimpleNode Script() : {}
+{
+  { enter("SCRIPT"); }
+  ( Expression() )+ <EOF>
+  { leave("SCRIPT"); }
+  { return jjtThis; }
+}
+
+void Expression() : {}
+{
+  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | LoopExpression() | <IDENTIFIER> | <NUMBER> | String() )
+}
+
+void ConditionalExpression() : {}
+{
+  { enter("CONDITIONAL"); }
+  <IF> Expression() <THEN> Expression() ( <ELSE> Expression() { visit("ELSE"); })? <END>
+  { leave("CONDITIONAL"); }
+}
+
+void LoopExpression() : {}
+{
+  { enter("LOOP"); }
+  <LOOP> <DO> ( LoopInteriorExpression() )* <END>
+  { leave("LOOP"); }
+}
+
+void WhileExpression() : {}
+{
+  { enter("WHILE"); }
+  <WHILE> Expression() <DO> ( LoopInteriorExpression() )* <END>
+  { leave("WHILE"); }
+}
+
+
+void LoopInteriorExpression() #Expression : {}
+{
+  // TODO Allow BreakExpression() again after doing scoping.
+  Expression()
+}
+
+void BreakExpression() : {}
+{
+  <BREAK> "("  Expression() ")"
+}
+
+void String() : { StringBuilder builder = new StringBuilder(); }
+{
+  { enter("STRING"); }
+  <QUOTE> (StringCharacter(builder))* <ENDQUOTE>
+  { leave("STRING"); }
+}
+
+void StringCharacter(StringBuilder builder) #void : { Token t; }
+{
+  t = <STRING_CHAR>
+  { builder.append(t.image.charAt(0)); }
+}
+
+void AssignmentExpression() : {}
+{
+  { enter("ASSIGNMENT"); }
+  <IDENTIFIER> <ASSIGN> Expression()
+  { leave("ASSIGNMENT"); }
+}
+
+void FunctionStart() : {}
+{
+  <FN> | <FUN> | <FUNC> | <FUNCTION> | <STAB>
+}
+
+void FunctionLiteralExpression() : {}
+{
+  { enter("FUNCTION"); }
+  FunctionStart() ArgumentList() "{" ( FunctionInteriorExpression() )* "}"
+  { leave("FUNCTION"); }
+}
+
+void FunctionInteriorExpression() #Expression : {}
+{
+  // TODO: Add support for ReturnExpression()
+  Expression()
+}
+
+void ArgumentList() : {}
+{
+  "(" ( <IDENTIFIER> ( "," <IDENTIFIER> )* )? ")"
+}
+
+void FunctionInvocationExpression() : {}
+{
+  { enter("INVOCATION"); }
+  <IDENTIFIER> "(" ( Expression() ( "," Expression() )? )? ")"
+  { leave("INVOCATION"); }
+}
