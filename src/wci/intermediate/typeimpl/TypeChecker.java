@@ -12,7 +12,7 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
  *
  * <p>Perform type checking.</p>
  *
- * <p>Copyright (c) 2009 by Ronald Mak</p>
+ * <p>Copyright (c) 2008 by Ronald Mak</p>
  * <p>For instructional purposes only.  No warranties.</p>
  */
 public class TypeChecker
@@ -130,10 +130,9 @@ public class TypeChecker
             compatible = true;
         }
 
-        // string := string
+        // Equal length strings
         else {
-            compatible =
-                targetType.isPascalString() && valueType.isPascalString();
+            compatible = equalLengthStrings(targetType, valueType);
         }
 
         return compatible;
@@ -168,11 +167,42 @@ public class TypeChecker
             compatible = true;
         }
 
-        // Two strings.
+        // Equal length strings
         else {
-            compatible = type1.isPascalString() && type2.isPascalString();
+            compatible = equalLengthStrings(type1, type2);
         }
 
         return compatible;
+    }
+
+    /**
+     * Check if two string type specifications are of equal length.
+     * @param type1 the first type specification to check.
+     * @param type2 the second type specification to check.
+     * @return true if the string types are equal length, else false.
+     */
+    private static boolean equalLengthStrings(TypeSpec type1, TypeSpec type2)
+    {
+        boolean equal = false;
+
+        if ((type1 != null) && (type2 != null) &&
+            (type1.getForm() == ARRAY) && (type2.getForm() == ARRAY))
+        {
+            TypeSpec elmtType1 =
+                (TypeSpec) type1.getAttribute(ARRAY_ELEMENT_TYPE);
+            TypeSpec elmtType2 =
+                (TypeSpec) type2.getAttribute(ARRAY_ELEMENT_TYPE);
+
+            if (isChar(elmtType1) && isChar(elmtType2)) {
+                int elmtCount1 =
+                    (Integer) type1.getAttribute(ARRAY_ELEMENT_COUNT);
+                int elmtCount2 =
+                    (Integer) type2.getAttribute(ARRAY_ELEMENT_COUNT);
+
+                equal = elmtCount1 == elmtCount2;
+            }
+        }
+
+        return equal;
     }
 }

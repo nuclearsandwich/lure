@@ -1,14 +1,13 @@
 package wci.backend;
 
 import wci.backend.compiler.CodeGenerator;
-import wci.backend.interpreter.Executor;
 
 /**
  * <h1>BackendFactory</h1>
  *
  * <p>A factory class that creates compiler and interpreter components.</p>
  *
- * <p>Copyright (c) 2009 by Ronald Mak</p>
+ * <p>Copyright (c) 2008 by Ronald Mak</p>
  * <p>For instructional purposes only.  No warranties.</p>
  */
 public class BackendFactory
@@ -24,9 +23,6 @@ public class BackendFactory
     {
         if (operation.equalsIgnoreCase("compile")) {
             return new CodeGenerator();
-        }
-        else if (operation.equalsIgnoreCase("execute")) {
-            return new Executor();
         }
         else {
             throw new Exception("Backend factory: Invalid operation '" +
