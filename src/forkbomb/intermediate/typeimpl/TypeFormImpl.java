@@ -1,21 +1,18 @@
 package forkbomb.intermediate.typeimpl;
 
-import forkbomb.intermediate.TypeForm;
+import wci.intermediate.TypeForm;
 
 /**
  * <h1>TypeFormImpl</h1>
  *
- * <p>Type forms for a Pascal type specification.</p>
+ * <p>Type forms for a Lure type specification.</p>
  *
- * <p>Copyright (c) 2008 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
+ * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
-public enum TypeFormImpl implements TypeForm
-{
-    SCALAR;
+public enum TypeFormImpl implements TypeForm {
+  SCALAR, RECORD;
 
-    public String toString()
-    {
-        return super.toString().toLowerCase();
-    }
+  public String toString() {
+    return super.toString().toLowerCase();
+  }
 }

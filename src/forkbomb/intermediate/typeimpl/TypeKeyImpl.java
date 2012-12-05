@@ -11,15 +11,8 @@ import wci.intermediate.TypeKey;
  */
 public enum TypeKeyImpl implements TypeKey
 {
-    // Enumeration
-    ENUMERATION_CONSTANTS,
+  VARIABLE,
 
-    // Subrange
-    SUBRANGE_BASE_TYPE, SUBRANGE_MIN_VALUE, SUBRANGE_MAX_VALUE,
-
-    // Array
-    ARRAY_INDEX_TYPE, ARRAY_ELEMENT_TYPE, ARRAY_ELEMENT_COUNT,
-
-    // Record
-    RECORD_SYMTAB
+  // Record
+  RECORD_SYMTAB
 }
