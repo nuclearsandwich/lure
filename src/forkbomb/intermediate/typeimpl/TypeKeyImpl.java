@@ -1,14 +1,13 @@
 package forkbomb.intermediate.typeimpl;
 
-import forkbomb.intermediate.TypeKey;
+import wci.intermediate.TypeKey;
 
 /**
  * <h1>TypeKeyImpl</h1>
  *
- * <p>Attribute keys for a Pascal type specification.</p>
+ * <p>Attribute keys for a Lure type specification.</p>
  *
- * <p>Copyright (c) 2008 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
+ * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
 public enum TypeKeyImpl implements TypeKey
 {

@@ -98,30 +98,4 @@ public class TypeSpecImpl
     {
         return this.get(key);
     }
-
-    /**
-     * @return true if this is a Pascal string type.
-     */
-    public boolean isPascalString()
-    {
-        if (form == ARRAY) {
-            TypeSpec elmtType  = (TypeSpec) getAttribute(ARRAY_ELEMENT_TYPE);
-            TypeSpec indexType = (TypeSpec) getAttribute(ARRAY_INDEX_TYPE);
-
-            return (elmtType.baseType()  == Predefined.charType) &&
-                   (indexType.baseType() == Predefined.integerType);
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * @return the base type of this type.
-     */
-    public TypeSpec baseType()
-    {
-        return form == SUBRANGE ? (TypeSpec) getAttribute(SUBRANGE_BASE_TYPE)
-                                : this;
-    }
 }
