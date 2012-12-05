@@ -1,0 +1,66 @@
+rpnCalc := -> (operation, arguments) {
+
+  answer := if =('+', operation) then
+    +(arguments)
+  else if =('-', operation) then
+    -(arguments)
+  else if =('*', operation) then
+    *(arguments)
+  else if =('/', operation) then
+    /(arguments)
+  end
+  arguments.clear()
+  arguments.add(answer)
+}
+
+rpnEval := -> (expression) {
+  input := strsplit(' ')
+  arglist := []
+  i := 0
+  while !=(0, values.size()) do
+    top := values.remove(0)
+    if or(
+          =('+', top),
+          =('-', top),
+          =('*', top),
+          =('/', top)) then
+      rpnCalc(top, arglist)
+    else
+      arglist.add(intparse(top)
+    end
+  end
+
+  strconv(arglist.get(0))
+}
+
+headerHtml := '
+<!DOCTYPE html>
+<html>
+  <head><title>Web RPN Calculator</title></head>
+  <body>
+    <h1>Web RPN Calculator</h1>
+'
+formHtml := '
+    <form action="/rpn" method="get">
+      <input type="text" value="" name="expr">
+      <input type="submit">
+    </form>
+'
+
+footerHtml := '
+  </body>
+</html>
+'
+
+get('/calc', -> (req, resp) {
+  resp.status(200)
+  resp.body(strcat(headerHtml, formHtml, footerHtml))
+})
+
+get('/rpn', -> (req, resp) {
+  expr := req.queryParams('expr')
+  resp.status(200)
+  answer := strcat('<p>The result of ', expr, ' is ', rpnEval(expr), '</p>')
+  strcat(headerHtml, answer, formHtml, htmlFooter)
+})
+

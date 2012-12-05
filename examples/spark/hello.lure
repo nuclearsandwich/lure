@@ -1,0 +1,8 @@
+# Greet an individual by name.
+get('/hello', -> (request, response) {
+  name := request.queryParams('name')
+  response.status(200)
+  strcat('<p>Hello, ',
+         name,
+         '!</p>')
+})
