@@ -1,11 +1,16 @@
 Parser
-	- Add arrays
-	- Add records/maps/objects
+	- Parse `[]` as empty array
+	- Parse `{}` as empty record.
+	- Add records
+
 Intermediate
 	- Fix type checker
+		- Add type future
 	- Set up Lure-friendly ICode implementation
 
 Backend
+	- Use java/util/ArrayList<Object> as Array implementation.
+	- Use java/lang/Object as Record implementation.
 	- Write a code generating compiler
 	- Write a standard library with
 		- +(1..5)
@@ -20,7 +25,7 @@ Backend
 		- !=(1..5)
 		- str.
 			- cat(1..5)
-			- conv(1)
+			- conv(1) #invokevirtual java/lang/Object/toString()Ljava/lang/String;
 		- int.
-			- parse(1)
+			- parse(1) #invokestatic java/lang/Integer/parseInt(Ljava/lang/String;)I
 
