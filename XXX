@@ -1,23 +1,23 @@
 Parser
-	- Parse `[]` as empty array
-	- Parse `{}` as empty record.
-	- Add records
+	- Parse `[]` as empty list
+	- Parse `{}` as empty record
+	- Add record field access
 
 Intermediate
 	- Fix type checker
-		- Add type future
+		- Add type futures/dependent types
 	- Set up Lure-friendly ICode implementation
 
 Backend
-	- Use java/util/ArrayList<Object> as Array implementation.
-	- Use java/lang/Object as Record implementation.
+	- Use java/util/ArrayList<Object> as Array implementation
+	- Use java/lang/Object as Record implementation
 	- Write a code generating compiler
 	- Write a standard library with
 		- +(1..5)
 		- -(1..5)
 		- *(1..5)
 		- /(1..5)
-		- =(1..5)
+		- =(1..5) #invokevirtual java/lang/Object/equals(Ljava/lang/Object);Z (I hope)
 		- >(1..5)
 		- <(1..5)
 		- >=(1..5)
