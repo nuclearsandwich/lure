@@ -1,0 +1,26 @@
+Parser
+	- Add arrays
+	- Add records/maps/objects
+Intermediate
+	- Fix type checker
+	- Set up Lure-friendly ICode implementation
+
+Backend
+	- Write a code generating compiler
+	- Write a standard library with
+		- +(1..5)
+		- -(1..5)
+		- *(1..5)
+		- /(1..5)
+		- =(1..5)
+		- >(1..5)
+		- <(1..5)
+		- >=(1..5)
+		- <=(1..5)
+		- !=(1..5)
+		- str.
+			- cat(1..5)
+			- conv(1)
+		- int.
+			- parse(1)
+

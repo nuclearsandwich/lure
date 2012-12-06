@@ -8,7 +8,7 @@ options {
 PARSER_BEGIN(LureParser)
   package forkbomb.frontend.parser;
 
-  import forkbomb.intermediate.*;
+  import wci.intermediate.*;
   import forkbomb.intermediate.symtabimpl.*;
   import forkbomb.util.*;
 
@@ -19,27 +19,29 @@ PARSER_BEGIN(LureParser)
 
   public class LureParser {
 
-   private static final String SOURCE_SUFFIX = ".lure";
-   private static final String OUTPUT_SUFFIX = ".j";
+    private static final String SOURCE_SUFFIX = ".lure";
+    private static final String OUTPUT_SUFFIX = ".j";
 
     private static SymTabStack symTabStack;
     private static SymTabEntry programId;
 
+    /* Print parse logs or not */
     private static boolean noisy = false;
+
     public static void main(String[] args) {
       try {
-      // Create and initialize the symbol table stack.
+        /* Create and initialize the symbol table stack. */
         symTabStack = SymTabFactory.createSymTabStack();
         Predefined.initialize(symTabStack);
 
-    //lure parser
+        /* Lure Parser reads the filename from the first argument. */
         LureParser parser = new LureParser(new java.io.FileInputStream(args[0]));
         SimpleNode script = parser.Script();
         script.dump(">");
 
-    //cross-reference table.
-        CrossReferencer crossReferencer = new CrossReferencer();
-        crossReferencer.print(symTabStack);
+        //cross-reference table.
+        /* CrossReferencer crossReferencer = new CrossReferencer(); */
+        /* crossReferencer.print(symTabStack); */
       }
       catch (ParseException e) { e.printStackTrace(); }
       catch (java.io.FileNotFoundException e) {
@@ -72,36 +74,36 @@ PARSER_BEGIN(LureParser)
   }
 PARSER_END(LureParser)
 
-SKIP : {
-  <IGNORE: [" "]>
-| <NEWLINE : "\n">
-| <LINECOMMENT: "#" (~["\n"])* "\n">
-}
+  SKIP : {
+    <IGNORE: [" "]>
+      | <NEWLINE : "\n">
+      | <LINECOMMENT: "#" (~["\n"])* "\n">
+  }
 
 // Keywords
 TOKEN: {
-  <END        : "end">
-| <IF         : "if">
-| <THEN       : "then">
-| <ELSE       : "else">
-| <LOOP       : "loop">
-| <WHILE      : "while">
-| <DO         : "do">
-| <BREAK      : "break">
-| <ASSIGN     : ":=">
-// Function Synonyms
-| <FN         : "fn">
-| <FUN        : "fun">
-| <FUNC       : "func">
-| <FUNCTION   : "function">
-| <STAB       : "->">
+ <END        : "end">
+ | <IF         : "if">
+ | <THEN       : "then">
+ | <ELSE       : "else">
+ | <LOOP       : "loop">
+ | <WHILE      : "while">
+ | <DO         : "do">
+ | <BREAK      : "break">
+ | <ASSIGN     : ":=">
+ // Function Synonyms
+ | <FN         : "fn">
+ | <FUN        : "fun">
+ | <FUNC       : "func">
+ | <FUNCTION   : "function">
+ | <STAB       : "->">
 }
 
 // Literals
 TOKEN : {
   <NUMBER     : (<DIGIT>)+>
-| <DIGIT      : ["0" - "9"]>
-| <QUOTE      : "'"> : STRING_STATE
+  | <DIGIT      : ["0" - "9"]>
+  | <QUOTE      : "'"> : STRING_STATE
 }
 
 // Identifiers
@@ -112,7 +114,7 @@ TOKEN: {
 <STRING_STATE> TOKEN:
 {
   <STRING_CHAR: ~["'"]>
-| <ENDQUOTE : <QUOTE>> : DEFAULT
+  | <ENDQUOTE : <QUOTE>> : DEFAULT
 }
 
 SimpleNode Script() : {}
@@ -123,7 +125,7 @@ SimpleNode Script() : {}
   { return jjtThis; }
 }
 
-void Expression() : {}
+SimpleNode Expression() #void : {}
 {
   (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | LoopExpression() | <IDENTIFIER> | <NUMBER> | String() )
 }
@@ -150,10 +152,12 @@ void WhileExpression() : {}
 }
 
 
-void LoopInteriorExpression() #Expression : {}
+void LoopInteriorExpression() #void : {SimpleNode rootNode;}
 {
   // TODO Allow BreakExpression() again after doing scoping.
-  Expression()
+  rootNode = Expression() {
+    return rootNode;
+  }
 }
 
 void BreakExpression() : {}
@@ -177,36 +181,36 @@ void StringCharacter(StringBuilder builder) #void : { Token t; }
 void AssignmentExpression() : {}
 {
   { enter("ASSIGNMENT"); }
-  <IDENTIFIER> <ASSIGN> Expression()
-  { leave("ASSIGNMENT"); }
-}
+    <IDENTIFIER> <ASSIGN> Expression()
+    { leave("ASSIGNMENT"); }
+  }
 
-void FunctionStart() : {}
-{
-  <FN> | <FUN> | <FUNC> | <FUNCTION> | <STAB>
-}
+  void FunctionStart() : {}
+  {
+    <FN> | <FUN> | <FUNC> | <FUNCTION> | <STAB>
+  }
 
-void FunctionLiteralExpression() : {}
-{
-  { enter("FUNCTION"); }
-  FunctionStart() ArgumentList() "{" ( FunctionInteriorExpression() )* "}"
-  { leave("FUNCTION"); }
-}
+  void FunctionLiteralExpression() : {}
+  {
+    { enter("FUNCTION"); }
+    FunctionStart() ArgumentList() "{" ( FunctionInteriorExpression() )* "}"
+    { leave("FUNCTION"); }
+  }
 
-void FunctionInteriorExpression() #Expression : {}
-{
-  // TODO: Add support for ReturnExpression()
-  Expression()
-}
+  void FunctionInteriorExpression() #Expression : {}
+  {
+    // TODO: Add support for ReturnExpression()
+    Expression()
+  }
 
-void ArgumentList() : {}
-{
-  "(" ( <IDENTIFIER> ( "," <IDENTIFIER> )* )? ")"
-}
+  void ArgumentList() : {}
+  {
+    "(" ( <IDENTIFIER> ( "," <IDENTIFIER> )* )? ")"
+  }
 
-void FunctionInvocationExpression() : {}
-{
-  { enter("INVOCATION"); }
-  <IDENTIFIER> "(" ( Expression() ( "," Expression() )? )? ")"
-  { leave("INVOCATION"); }
-}
+  void FunctionInvocationExpression() : {}
+  {
+    { enter("INVOCATION"); }
+    <IDENTIFIER> "(" ( Expression() ( "," Expression() )? )? ")"
+    { leave("INVOCATION"); }
+  }

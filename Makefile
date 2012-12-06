@@ -15,5 +15,14 @@ clean:
 runall: build
 	script/runall
 
+sparktest: spark/src/sparktest/SparkTest.java
+	javac -cp 'lib/*' -d bin $^
 
-.PHONY: parser clean build run runall clobber
+sparkrpnb: spark/src/rpn/RPNCalc.java
+	javac -cp 'lib/*' -d bin $^
+
+sparkrpn: sparkrpnb
+	java -cp 'lib/*':bin rpn.RPNCalc
+
+
+.PHONY: parser clean build run runall clobber sparktest

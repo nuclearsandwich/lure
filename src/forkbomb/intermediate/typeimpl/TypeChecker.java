@@ -1,6 +1,6 @@
 package forkbomb.intermediate.typeimpl;
 
-import forkbomb.intermediate.*;
+import wci.intermediate.*;
 import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.intermediate.typeimpl.*;
 
