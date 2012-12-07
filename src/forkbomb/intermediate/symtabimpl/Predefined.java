@@ -3,7 +3,9 @@ package forkbomb.intermediate.symtabimpl;
 import java.util.ArrayList;
 
 import wci.intermediate.*;
-import forkbomb.intermediate.symtabimpl.*;
+import forkbomb.intermediate.typeimpl.TypeFormImpl;
+import forkbomb.intermediate.typeimpl.TypeKeyImpl;
+import forkbomb.intermediate.typeimpl.TypeSpecImpl;
 
 import static forkbomb.intermediate.symtabimpl.DefinitionImpl.*;
 import static forkbomb.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -19,8 +21,7 @@ import static forkbomb.intermediate.typeimpl.TypeKeyImpl.*;
  *
  * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
-public class Predefined
-{
+public class Predefined {
   // Predefined identifiers.
   public static SymTabEntry falseId;
   public static SymTabEntry trueId;
@@ -30,8 +31,7 @@ public class Predefined
    * Initialize a symbol table stack with predefined identifiers.
    * @param symTab the symbol table stack to initialize.
    */
-  public static void initialize(SymTabStack symTabStack)
-  {
+  public static void initialize(SymTabStack symTabStack) {
     initializeConstants(symTabStack);
     initializeStandardRoutines(symTabStack);
   }
@@ -40,24 +40,23 @@ public class Predefined
    * Initialize the predefined constant.
    * @param symTabStack the symbol table stack to initialize.
    */
-  private static void initializeConstants(SymTabStack symTabStack)
-  {
+  private static void initializeConstants(SymTabStack symTabStack) {
     // Constant value false.
     falseId = symTabStack.enterLocal("false");
     falseId.setDefinition(DefinitionImpl.VARIABLE);
-    falseId.setTypeSpec(BOOLEAN_TYPE);
+    falseId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.BOOLEAN));
     falseId.setAttribute(CONSTANT_VALUE, false);
 
     // Constant value true.
     trueId = symTabStack.enterLocal("true");
     trueId.setDefinition(DefinitionImpl.VARIABLE);
-    trueId.setTypeSpec(BOOLEAN_TYPE);
+    trueId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.BOOLEAN));
     trueId.setAttribute(CONSTANT_VALUE, true);
 
     // Constant value nil.
     nilId = symTabStack.enterLocal("nil");
     nilId.setDefinition(DefinitionImpl.VARIABLE);
-    nilId.setTypeSpec(NIL_TYPE);
+    nilId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.NIL));
     nilId.setAttribute(CONSTANT_VALUE, null);
   }
 
@@ -65,8 +64,7 @@ public class Predefined
    * Initialize the standard procedures and functions.
    * @param symTabStack the symbol table stack to initialize.
    */
-  private static void initializeStandardRoutines(SymTabStack symTabStack)
-  {
+  private static void initializeStandardRoutines(SymTabStack symTabStack) {
   }
 
   /**

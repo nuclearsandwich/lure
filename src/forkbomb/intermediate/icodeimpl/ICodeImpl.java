@@ -1,6 +1,6 @@
 package forkbomb.intermediate.icodeimpl;
 
-import forkbomb.frontend.parser.Node;
+import forkbomb.frontend.Node;
 import forkbomb.intermediate.*;
 
 /**

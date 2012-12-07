@@ -1,6 +1,6 @@
 package forkbomb.intermediate.typeimpl;
 
-import wci.intermediate.TypeKey;
+import forkbomb.intermediate.TypeKey;
 
 /**
  * <h1>TypeKeyImpl</h1>

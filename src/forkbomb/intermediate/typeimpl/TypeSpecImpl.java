@@ -3,10 +3,13 @@ package forkbomb.intermediate.typeimpl;
 import java.util.HashMap;
 
 import wci.intermediate.*;
+import forkbomb.intermediate.TypeForm;
+import forkbomb.intermediate.TypeKey;
+import forkbomb.intermediate.TypeSpec;
 import forkbomb.intermediate.symtabimpl.Predefined;
 
-import static forkbomb.intermediate.typeimpl.TypeFormImpl.*;
-import static forkbomb.intermediate.typeimpl.TypeKeyImpl.*;
+import forkbomb.intermediate.typeimpl.TypeFormImpl;
+import forkbomb.intermediate.typeimpl.TypeKeyImpl;
 
 /**
  * <h1>TypeSpecImpl</h1>
@@ -14,7 +17,6 @@ import static forkbomb.intermediate.typeimpl.TypeKeyImpl.*;
  * <p>A Lure type specification implementation.</p>
  *
  * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
- * <p>For instructional purposes only.  No warranties.</p>
  */
 public class TypeSpecImpl
   extends HashMap<TypeKey, Object>
@@ -39,7 +41,7 @@ public class TypeSpecImpl
    */
   public TypeSpecImpl(String value)
   {
-    this.form = SCALAR;
+    this.form = TypeFormImpl.STRING;
   }
 
   /**
@@ -87,5 +89,9 @@ public class TypeSpecImpl
   public Object getAttribute(TypeKey key)
   {
     return this.get(key);
+  }
+
+  public TypeSpec baseType() {
+    return this;
   }
 }

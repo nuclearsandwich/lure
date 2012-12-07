@@ -1,6 +1,6 @@
 package forkbomb.intermediate.typeimpl;
 
-import wci.intermediate.TypeForm;
+import forkbomb.intermediate.TypeForm;
 
 /**
  * <h1>TypeFormImpl</h1>
@@ -10,7 +10,7 @@ import wci.intermediate.TypeForm;
  * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
 public enum TypeFormImpl implements TypeForm {
-  SCALAR, RECORD;
+  STRING, NUMBER, BOOLEAN, RECORD, NIL;
 
   public String toString() {
     return super.toString().toLowerCase();

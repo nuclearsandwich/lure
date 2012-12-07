@@ -1,16 +1,16 @@
 options {
-  JJTREE_OUTPUT_DIRECTORY="src/forkbomb/frontend/parser";
-  OUTPUT_DIRECTORY="src/forkbomb/frontend/parser";
+  JJTREE_OUTPUT_DIRECTORY="src/forkbomb/frontend";
+  OUTPUT_DIRECTORY="src/forkbomb/frontend";
   NODE_EXTENDS="forkbomb.intermediate.icodeimpl.ICodeNodeImpl";
   VISITOR=true;
 }
 
 PARSER_BEGIN(LureParser)
-  package forkbomb.frontend.parser;
+  package forkbomb.frontend;
 
   import wci.intermediate.*;
+  import forkbomb.intermediate.SymTabFactory;
   import forkbomb.intermediate.symtabimpl.*;
-  import forkbomb.util.*;
 
   import static forkbomb.intermediate.symtabimpl.SymTabKeyImpl.*;
   import static forkbomb.intermediate.symtabimpl.DefinitionImpl.*;
@@ -125,22 +125,27 @@ SimpleNode Script() : {}
   { return jjtThis; }
 }
 
-SimpleNode Expression() #void : {}
+void Expression() #void : {}
 {
   (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | LoopExpression() | <IDENTIFIER> | <NUMBER> | String() )
 }
 
-void ConditionalExpression() : {}
+SimpleNode ConditionalExpression() : {}
 {
   { enter("CONDITIONAL"); }
-  <IF> Expression() <THEN> Expression() ( <ELSE> Expression() { visit("ELSE"); })? <END>
+  <IF> Expression() <THEN> Expression() ( <ELSE> Expression() { visit("ELSE"); })? <END> {
+    return jjtThis;
+  }
   { leave("CONDITIONAL"); }
+
 }
 
-void LoopExpression() : {}
+SimpleNode  LoopExpression() : {}
 {
   { enter("LOOP"); }
-  <LOOP> <DO> ( LoopInteriorExpression() )* <END>
+  <LOOP> <DO> ( LoopInteriorExpression() )* <END> {
+    return jjtThis;
+  }
   { leave("LOOP"); }
 }
 
@@ -152,12 +157,10 @@ void WhileExpression() : {}
 }
 
 
-void LoopInteriorExpression() #void : {SimpleNode rootNode;}
+void LoopInteriorExpression() #void : {}
 {
   // TODO Allow BreakExpression() again after doing scoping.
-  rootNode = Expression() {
-    return rootNode;
-  }
+  Expression()
 }
 
 void BreakExpression() : {}

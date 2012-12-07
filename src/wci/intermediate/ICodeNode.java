@@ -2,6 +2,10 @@ package wci.intermediate;
 
 import java.util.ArrayList;
 
+import forkbomb.intermediate.TypeForm;
+import forkbomb.intermediate.TypeKey;
+import forkbomb.intermediate.TypeSpec;
+
 /**
  * <h1>ICodeNode</h1>
  *

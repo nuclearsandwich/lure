@@ -1,12 +1,13 @@
-package wci.intermediate;
+package forkbomb.intermediate;
+
+import wci.intermediate.*;
 
 /**
  * <h1>TypeSpec</h1>
  *
- * <p>The interface for a type specification.</p>
+ * <p>The interface for a Lure type specification.</p>
  *
- * <p>Copyright (c) 2008 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
+ * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
 public interface TypeSpec
 {
@@ -41,11 +42,6 @@ public interface TypeSpec
      * @return the attribute value.
      */
     public Object getAttribute(TypeKey key);
-
-    /**
-     * @return true if this is a Pascal string type.
-     */
-    public boolean isPascalString();
 
     /**
      * @return the base type of this type.

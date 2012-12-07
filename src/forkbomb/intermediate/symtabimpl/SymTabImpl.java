@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 import wci.intermediate.*;
+import forkbomb.intermediate.SymTabFactory;
 
 /**
  * <h1>SymTabImpl</h1>

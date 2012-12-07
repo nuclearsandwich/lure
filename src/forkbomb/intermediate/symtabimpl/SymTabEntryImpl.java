@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import wci.intermediate.*;
+import forkbomb.intermediate.TypeForm;
+import forkbomb.intermediate.TypeKey;
+import forkbomb.intermediate.TypeSpec;
+
 
 /**
  * <h1>SymTabEntryImpl</h1>

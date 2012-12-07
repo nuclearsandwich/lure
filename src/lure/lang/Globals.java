@@ -18,7 +18,8 @@ public class Globals {
 
   /* not() in Lure. Negates the truthiness of a value. */
   public static Object not(Object arg1) {
-    if (arg1 == false || arg1 == null) {
+    Boolean b = ((Boolean)arg1);
+    if (b == false || b == null) {
       return true;
     } else {
       return false;

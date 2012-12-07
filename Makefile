@@ -1,12 +1,12 @@
-parser: src/forkbomb/frontend/parser/Lure.jj
+parser: src/forkbomb/frontend/Lure.jj
 	javacc $^
 
-src/forkbomb/frontend/parser/Lure.jj: Lure.jjt
+src/forkbomb/frontend/Lure.jj: Lure.jjt
 	jjtree Lure.jjt
 
 build: clean parser
 	mkdir bin
-	find src -name *.java | xargs javac -d bin
+	find src -name '*.java' | xargs javac -d bin
 
 clean:
 	rm -rf bin

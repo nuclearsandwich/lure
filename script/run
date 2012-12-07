@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp bin forkbomb.frontend.parser.LureParser "$1"
+java -cp bin forkbomb.frontend.LureParser "$1"

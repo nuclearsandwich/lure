@@ -1,6 +1,6 @@
 package wci.intermediate;
 
-import wci.frontend.Node;
+import forkbomb.frontend.Node;
 
 /**
  * <h1>ICode</h1>

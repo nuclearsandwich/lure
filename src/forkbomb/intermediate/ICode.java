@@ -1,6 +1,6 @@
 package forkbomb.intermediate;
 
-import forkbomb.frontend.parser.Node;
+import forkbomb.frontend.Node;
 
 /**
  * <h1>ICode</h1>
