@@ -26,6 +26,7 @@ Backend
 		- str.
 			- cat(1..5)
 			- conv(1) #invokevirtual java/lang/Object/toString()Ljava/lang/String;
+			- split(2)
 		- int.
 			- parse(1) #invokestatic java/lang/Integer/parseInt(Ljava/lang/String;)I
 

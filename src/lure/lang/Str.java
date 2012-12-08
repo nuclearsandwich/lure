@@ -51,4 +51,12 @@ public class Str {
   public static Object conv(Object arg1) {
     return arg1.toString();
   }
+
+  public static ArrayList split(Object base, Object regex) {
+    ArrayList<Object> result = new ArrayList<Object>();
+    for (String s : ((String)base).split((String)regex)) {
+      result.add(s);
+    }
+    return result;
+  }
 }
