@@ -24,6 +24,10 @@ public class JasminInstructor implements Instructor {
     write("new", classSpec);
   }
 
+  public void _return() {
+    write("return");
+  }
+
   public void aload(int i) {
     write("aload", ((Integer)i).toString());
   }
@@ -40,6 +44,10 @@ public class JasminInstructor implements Instructor {
     write(".end method");
   }
 
+  public void getstatic(String descriptor, String classSpec) {
+    write("getstatic", descriptor, classSpec);
+  }
+
   public void invokespecial(String methodSpec) {
     write("invokespecial", methodSpec);
   }
@@ -50,6 +58,26 @@ public class JasminInstructor implements Instructor {
 
   public void invokevirtual(String methodSpec) {
     write("invokevirtual", methodSpec);
+  }
+
+  public void ldc(String s) {
+    write("ldc", "\"" + s + "\"");
+  }
+
+  public void ldc(float f) {
+    write("ldc", ((Float)f).toString());
+  }
+
+  public void ldc(int i) {
+    write("ldc", ((Integer)i).toString());
+  }
+
+  public void limit_locals(int i) {
+    write(".limit locals", ((Integer)i).toString());
+  }
+
+  public void limit_stack(int i) {
+    write(".limit stack", ((Integer)i).toString());
   }
 
   public void private_method(String methodSpec) {
