@@ -29,6 +29,7 @@ public class Predefined {
 
   // Builtin global functions.
   public static SymTabEntry putsId;
+  public static SymTabEntry plusId;
 
   /**
    * Initialize a symbol table stack with predefined identifiers.
@@ -68,9 +69,15 @@ public class Predefined {
    * @param symTabStack the symbol table stack to initialize.
    */
   private static void initializeStandardFunctions(SymTabStack symTabStack) {
-    putsId = symTabStack.enterLocal("puts");
-    putsId.setDefinition(DefinitionImpl.BUILTIN_FUNCTION);
-    putsId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.FUNCTION));
-    putsId.setAttribute(FUNCTION_SLUG, "lure/lang/Globals/puts");
+    putsId = enterBuiltin(symTabStack, "puts", "lure/lang/Globals/puts");
+    plusId = enterBuiltin(symTabStack, "+", "lure/lang/Globals/plus");
+  }
+
+  private static SymTabEntry enterBuiltin(SymTabStack stack, String name, String slug) {
+    SymTabEntry e = stack.enterLocal(name);
+    e.setDefinition(DefinitionImpl.BUILTIN_FUNCTION);
+    e.setTypeSpec(new TypeSpecImpl(TypeFormImpl.FUNCTION));
+    e.setAttribute(FUNCTION_SLUG, slug);
+    return e;
   }
 }
