@@ -7,6 +7,7 @@ public interface Instructor {
   public void areturn();
   public void astore(int i);
   public void end_method();
+  public void finish();
   public void getstatic(String descriptor, String classSpec);
   public void invokespecial(String methodSpec);
   public void invokestatic(String methodSpec);
