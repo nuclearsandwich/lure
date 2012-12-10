@@ -1,4 +1,4 @@
-package test;
+package test.forkbomb.backend.bytemarks;
 
 import forkbomb.backend.bytemarks.JasminInstructor;
 

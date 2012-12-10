@@ -3,6 +3,7 @@ package forkbomb.backend;
 import forkbomb.backend.bytemarks.*;
 import wci.intermediate.*;
 import forkbomb.intermediate.icodeimpl.*;
+import forkbomb.util.Mercury;
 
 import static forkbomb.intermediate.icodeimpl.ICodeKeyImpl.*;
 
@@ -32,6 +33,7 @@ public class LureCompiler {
     }
 
     public void generate() {
+      Mercury.debug("Generating " + node.toString() + node.getAttribute(VALUE).toString());
       switch((ICodeNodeTypeImpl)node.getType()) {
         case SCRIPT:
           generateScript();
@@ -47,6 +49,7 @@ public class LureCompiler {
           return;
         case VARIABLE:
           generateVariable();
+          return;
         case CALL:
           generateCall();
       }
@@ -72,11 +75,12 @@ public class LureCompiler {
 
     private void generateIntegerConstant() {
       instructor.ldc((Integer)node.getAttribute(VALUE));
+      instructor.invokestatic("java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
     }
 
     private void generateAssign() {
       if (node.getChildren().size() > 1) {
-        System.err.println("!!! WARNING: Multiple children of ASSIGN");
+        Mercury.warn("Multiple children of ASSIGN");
       }
 
       int index = (Integer)node.getAttribute(ID);
@@ -97,6 +101,7 @@ public class LureCompiler {
         (new Generator(arg)).generate();
       }
 
+      Mercury.debug("Invoking static method " + slug + " with arity " + arity);
       instructor.invokestatic(methodSignature(slug, arity));
     }
 

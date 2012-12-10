@@ -5,6 +5,7 @@ import forkbomb.intermediate.SymTabFactory;
 import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.intermediate.icodeimpl.*;
 import forkbomb.intermediate.ICodeFactory;
+import forkbomb.util.Mercury;
 
 import static forkbomb.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 
@@ -92,6 +93,10 @@ public class LureASTParser implements LureParserVisitor {
     ICodeNode fun = ICodeFactory.createICodeNode(CALL);
     SimpleNode funAccess = (SimpleNode)node.jjtGetChild(0);
     SymTabEntry e = symbolTable.lookupLocal((String)funAccess.jjtGetValue());
+
+    if (e == null) {
+      Mercury.fatal("No known value for identifier " + (String)funAccess.jjtGetValue());
+    }
 
     if (e.getDefinition() == DefinitionImpl.BUILTIN_FUNCTION) {
       fun.setAttribute(ICodeKeyImpl.VALUE, e.getAttribute(SymTabKeyImpl.FUNCTION_SLUG));
