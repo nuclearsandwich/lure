@@ -1,7 +1,6 @@
 options {
   JJTREE_OUTPUT_DIRECTORY="src/forkbomb/frontend";
   OUTPUT_DIRECTORY="src/forkbomb/frontend";
-  NODE_EXTENDS="forkbomb.intermediate.icodeimpl.ICodeNodeImpl";
   VISITOR=true;
   MULTI=true;
 }
