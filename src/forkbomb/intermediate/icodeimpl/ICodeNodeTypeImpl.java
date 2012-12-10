@@ -1,38 +1,21 @@
 package forkbomb.intermediate.icodeimpl;
 
-import forkbomb.intermediate.ICodeNodeType;
+import wci.intermediate.ICodeNodeType;
 
 /**
  * <h1>ICodeNodeType</h1>
  *
  * <p>Node types of the intermediate code parse tree.</p>
  *
- * <p>Copyright (c) 2009 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
+ * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
-public enum ICodeNodeTypeImpl implements ICodeNodeType
-{
-    // Program structure
-    PROGRAM, PROCEDURE, FUNCTION,
+public enum ICodeNodeTypeImpl implements ICodeNodeType {
+  // Program structure
+  SCRIPT, FUNCTION,
 
-    // Statements
-    COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS,
-    IF, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,
+  // Statements
+  ASSIGN, LOOP, TEST, CALL, IF, SELECT, SELECT_BRANCH, NO_OP,
 
-    // Relational operators
-    EQ, NE, LT, LE, GT, GE, NOT,
-
-    // Additive operators
-    ADD, SUBTRACT, OR, NEGATE,
-
-    // Multiplicative operators
-    MULTIPLY, INTEGER_DIVIDE, FLOAT_DIVIDE, MOD, AND,
-
-    // Operands
-    VARIABLE, SUBSCRIPTS, FIELD,
-    INTEGER_CONSTANT, REAL_CONSTANT,
-    STRING_CONSTANT, BOOLEAN_CONSTANT,
-
-    // WRITE parameter
-    WRITE_PARM,
+  // Operands
+  VARIABLE, INTEGER_CONSTANT, STRING_CONSTANT,
 }

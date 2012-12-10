@@ -1,7 +1,7 @@
 package forkbomb.intermediate.icodeimpl;
 
 import forkbomb.frontend.Node;
-import forkbomb.intermediate.*;
+import wci.intermediate.*;
 
 /**
  * <h1>ICodeImpl</h1>
@@ -11,27 +11,24 @@ import forkbomb.intermediate.*;
  * <p>Copyright (c) 2008 by Ronald Mak</p>
  * <p>For instructional purposes only.  No warranties.</p>
  */
-public class ICodeImpl implements ICode
-{
-    private Node root;  // root node
+public class ICodeImpl implements ICode {
+  private Node root;  // root node
 
-    /**
-     * Set and return the root node.
-     * @param node the node to set as root.
-     * @return the root node.
-     */
-    public Node setRoot(Node node)
-    {
-        root = node;
-        return root;
-    }
+  /**
+   * Set and return the root node.
+   * @param node the node to set as root.
+   * @return the root node.
+   */
+  public Node setRoot(Node node) {
+    root = node;
+    return root;
+  }
 
-    /**
-     * Get the root node.
-     * @return the root node.
-     */
-    public Node getRoot()
-    {
-        return root;
-    }
+  /**
+   * Get the root node.
+   * @return the root node.
+   */
+  public Node getRoot() {
+    return root;
+  }
 }

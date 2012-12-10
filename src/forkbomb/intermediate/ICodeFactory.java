@@ -1,5 +1,6 @@
 package forkbomb.intermediate;
 
+import wci.intermediate.*;
 import forkbomb.intermediate.icodeimpl.ICodeImpl;
 import forkbomb.intermediate.icodeimpl.ICodeNodeImpl;
 

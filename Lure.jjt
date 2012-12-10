@@ -3,45 +3,28 @@ options {
   OUTPUT_DIRECTORY="src/forkbomb/frontend";
   NODE_EXTENDS="forkbomb.intermediate.icodeimpl.ICodeNodeImpl";
   VISITOR=true;
+  MULTI=true;
 }
 
 PARSER_BEGIN(LureParser)
   package forkbomb.frontend;
 
-  import wci.intermediate.*;
-  import forkbomb.intermediate.SymTabFactory;
-  import forkbomb.intermediate.symtabimpl.*;
-
-  import static forkbomb.intermediate.symtabimpl.SymTabKeyImpl.*;
-  import static forkbomb.intermediate.symtabimpl.DefinitionImpl.*;
-  import static forkbomb.intermediate.symtabimpl.SymTabKeyImpl.*;
-  import static forkbomb.intermediate.icodeimpl.ICodeKeyImpl.*;
+  import wci.intermediate.ICodeNode;
+  import forkbomb.backend.LureCompiler;
 
   public class LureParser {
 
-    private static final String SOURCE_SUFFIX = ".lure";
-    private static final String OUTPUT_SUFFIX = ".j";
-
-    private static SymTabStack symTabStack;
-    private static SymTabEntry programId;
-
-    /* Print parse logs or not */
-    private static boolean noisy = false;
-
     public static void main(String[] args) {
       try {
-        /* Create and initialize the symbol table stack. */
-        symTabStack = SymTabFactory.createSymTabStack();
-        Predefined.initialize(symTabStack);
-
         /* Lure Parser reads the filename from the first argument. */
         LureParser parser = new LureParser(new java.io.FileInputStream(args[0]));
         SimpleNode script = parser.Script();
         script.dump(">");
-
-        //cross-reference table.
-        /* CrossReferencer crossReferencer = new CrossReferencer(); */
-        /* crossReferencer.print(symTabStack); */
+        LureASTParser ast = new LureASTParser();
+        ICodeNode root = ast.parse(script);
+        LureCompiler compiler = new LureCompiler();
+        compiler.printICTree(root);
+        compiler.compile(root);
       }
       catch (ParseException e) { e.printStackTrace(); }
       catch (java.io.FileNotFoundException e) {
@@ -71,6 +54,7 @@ PARSER_BEGIN(LureParser)
       }
     }
     private static int nesting = 0;
+    private static boolean noisy = false;
   }
 PARSER_END(LureParser)
 
@@ -127,7 +111,7 @@ SimpleNode Script() : {}
 
 void Expression() #void : {}
 {
-  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | LoopExpression() | <IDENTIFIER> | <NUMBER> | String() )
+  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | LoopExpression() | VariableAccess() | Number() | String() )
 }
 
 SimpleNode ConditionalExpression() : {}
@@ -140,7 +124,7 @@ SimpleNode ConditionalExpression() : {}
 
 }
 
-SimpleNode  LoopExpression() : {}
+SimpleNode LoopExpression() : {}
 {
   { enter("LOOP"); }
   <LOOP> <DO> ( LoopInteriorExpression() )* <END> {
@@ -149,13 +133,14 @@ SimpleNode  LoopExpression() : {}
   { leave("LOOP"); }
 }
 
-void WhileExpression() : {}
+SimpleNode WhileExpression() : {}
 {
   { enter("WHILE"); }
-  <WHILE> Expression() <DO> ( LoopInteriorExpression() )* <END>
+  <WHILE> Expression() <DO> ( LoopInteriorExpression() )* <END> {
+    return jjtThis;
+  }
   { leave("WHILE"); }
 }
-
 
 void LoopInteriorExpression() #void : {}
 {
@@ -163,15 +148,21 @@ void LoopInteriorExpression() #void : {}
   Expression()
 }
 
-void BreakExpression() : {}
+SimpleNode Number() : {}
 {
-  <BREAK> "("  Expression() ")"
+  <NUMBER> {
+    jjtThis.jjtSetValue(token.image);
+    return jjtThis;
+  }
 }
 
-void String() : { StringBuilder builder = new StringBuilder(); }
+SimpleNode String() : { StringBuilder builder = new StringBuilder(); }
 {
   { enter("STRING"); }
-  <QUOTE> (StringCharacter(builder))* <ENDQUOTE>
+  <QUOTE> (StringCharacter(builder))* <ENDQUOTE> {
+  jjtThis.jjtSetValue(builder.toString());
+  return jjtThis;
+  }
   { leave("STRING"); }
 }
 
@@ -181,39 +172,50 @@ void StringCharacter(StringBuilder builder) #void : { Token t; }
   { builder.append(t.image.charAt(0)); }
 }
 
-void AssignmentExpression() : {}
+void AssignmentExpression() : {Token identifier;}
 {
   { enter("ASSIGNMENT"); }
-    <IDENTIFIER> <ASSIGN> Expression()
-    { leave("ASSIGNMENT"); }
-  }
+    identifier = <IDENTIFIER>
+      <ASSIGN> Expression() {
+    }
 
-  void FunctionStart() : {}
-  {
-    <FN> | <FUN> | <FUNC> | <FUNCTION> | <STAB>
-  }
+  { leave("ASSIGNMENT"); }
+}
 
-  void FunctionLiteralExpression() : {}
-  {
-    { enter("FUNCTION"); }
-    FunctionStart() ArgumentList() "{" ( FunctionInteriorExpression() )* "}"
-    { leave("FUNCTION"); }
-  }
+void FunctionStart() #void : {}
+{
+  <FN> | <FUN> | <FUNC> | <FUNCTION> | <STAB>
+}
 
-  void FunctionInteriorExpression() #Expression : {}
-  {
-    // TODO: Add support for ReturnExpression()
-    Expression()
-  }
+void FunctionLiteralExpression() : {}
+{
+  { enter("FUNCTION"); }
+  FunctionStart() ArgumentList() "{" ( FunctionInteriorExpression() )* "}"
+  { leave("FUNCTION"); }
+}
 
-  void ArgumentList() : {}
-  {
-    "(" ( <IDENTIFIER> ( "," <IDENTIFIER> )* )? ")"
-  }
+void FunctionInteriorExpression() #void : {}
+{
+  Expression()
+}
 
-  void FunctionInvocationExpression() : {}
-  {
-    { enter("INVOCATION"); }
-    <IDENTIFIER> "(" ( Expression() ( "," Expression() )? )? ")"
-    { leave("INVOCATION"); }
-  }
+void ArgumentList() : {}
+{
+  "(" ( <IDENTIFIER> ( "," <IDENTIFIER> )* )? ")"
+}
+
+void FunctionInvocationExpression() : {}
+{
+  { enter("INVOCATION"); }
+  VariableAccess() "(" ( Expression() ( "," Expression() )? )? ")"
+  { leave("INVOCATION"); }
+}
+
+SimpleNode VariableAccess() : {}
+{
+  { enter("VARIABLEACCESS"); }
+    <IDENTIFIER> {
+      return jjtThis;
+    }
+  { leave("VARIABLEACCESS"); }
+}

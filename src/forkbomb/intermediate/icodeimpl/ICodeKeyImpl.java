@@ -1,6 +1,6 @@
 package forkbomb.intermediate.icodeimpl;
 
-import forkbomb.intermediate.ICodeKey;
+import wci.intermediate.ICodeKey;
 
 /**
  * <h1>ICodeKeyImpl</h1>
