@@ -1,5 +1,4 @@
 rpnCalc := -> (operation, arguments) {
-
   answer := if =('+', operation) then
     +(arguments)
   else if =('-', operation) then
