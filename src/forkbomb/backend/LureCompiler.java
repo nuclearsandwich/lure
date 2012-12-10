@@ -4,6 +4,8 @@ import forkbomb.backend.bytemarks.*;
 import wci.intermediate.*;
 import forkbomb.intermediate.icodeimpl.*;
 
+import static forkbomb.intermediate.icodeimpl.ICodeKeyImpl.*;
+
 public class LureCompiler {
   private ICodeNode rootNode, currentNode;
   private Instructor instructor;
@@ -58,8 +60,15 @@ public class LureCompiler {
     }
 
     private void generateAssign() {
-      // lookup index in symbol table.
-      // astore index, object
+
+      if (node.getChildren().size() > 1) {
+        System.err.println("!!! WARNING: Multiple children of ASSIGN");
+      }
+
+      int index = (Integer)node.getAttribute(ID);
+      /* Generate bytecode for the expression to be assigned. */
+      (new Generator(node.getChildren().get(0))).generate();
+      instructor.astore(index);
     }
   }
 }

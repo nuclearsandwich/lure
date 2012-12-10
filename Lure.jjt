@@ -171,11 +171,13 @@ void StringCharacter(StringBuilder builder) #void : { Token t; }
   { builder.append(t.image.charAt(0)); }
 }
 
-void AssignmentExpression() : {Token identifier;}
+SimpleNode AssignmentExpression() : {Token identifier;}
 {
   { enter("ASSIGNMENT"); }
     identifier = <IDENTIFIER>
       <ASSIGN> Expression() {
+      jjtThis.jjtSetValue(identifier.image);
+      return jjtThis;
     }
 
   { leave("ASSIGNMENT"); }

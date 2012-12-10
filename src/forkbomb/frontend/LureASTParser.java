@@ -1,6 +1,8 @@
 package forkbomb.frontend;
 
 import wci.intermediate.*;
+import forkbomb.intermediate.SymTabFactory;
+import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.intermediate.icodeimpl.*;
 import forkbomb.intermediate.ICodeFactory;
 
@@ -8,9 +10,11 @@ import forkbomb.intermediate.ICodeFactory;
  * an ICode representation. */
 public class LureASTParser implements LureParserVisitor {
 
-  public ICodeNode newRoot;
+  private ICodeNode newRoot;
+  private SymTabStack symbolTable;
 
   public ICodeNode parse(SimpleNode root) {
+    symbolTable = SymTabFactory.createSymTabStack();
     root.jjtAccept(this, null);
     return newRoot;
   }
@@ -21,7 +25,7 @@ public class LureASTParser implements LureParserVisitor {
 
   public Object visit(ASTScript node, Object data) {
     ICodeNode script = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.SCRIPT);
-    script.setAttribute(ICodeKeyImpl.VALUE, (Object)"LureMain");
+    script.setAttribute(ICodeKeyImpl.VALUE, "LureMain");
 
     for (int i = 0; i < node.jjtGetNumChildren(); i++) {
       ICodeNode n = (ICodeNode)node.jjtGetChild(i).jjtAccept(this, null);
@@ -57,6 +61,9 @@ public class LureASTParser implements LureParserVisitor {
 
   public Object visit(ASTAssignmentExpression node, Object data) {
     ICodeNode assign = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.ASSIGN);
+    SymTabEntry e = symbolTable.enterLocal((String)node.jjtGetValue());
+    assign.setAttribute(ICodeKeyImpl.VALUE, e.getName());
+    assign.setAttribute(ICodeKeyImpl.ID, e.getIndex());
     for (int i = 0; i < node.jjtGetNumChildren(); i++) {
       assign.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
     }
@@ -83,6 +90,10 @@ public class LureASTParser implements LureParserVisitor {
   }
 
   public Object visit(ASTVariableAccess node, Object data) {
+    ICodeNode access = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.VARIABLE);
+    SymTabEntry e = symbolTable.lookupLocal((String)node.jjtGetValue());
+    access.setAttribute(ICodeKeyImpl.VALUE, e.getName());
+    access.setAttribute(ICodeKeyImpl.ID, e.getIndex());
     return null;
   }
 }
