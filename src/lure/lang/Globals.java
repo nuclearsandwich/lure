@@ -165,4 +165,34 @@ public class Globals {
     return ((Integer) arg1) / ((Integer) arg2) / ((Integer) arg3) /
       ((Integer) arg4) / ((Integer) arg5);
   }
+
+  public static Object puts(Object arg1) {
+    System.out.println(arg1);
+    return null;
+  }
+
+  public static Object puts(Object arg1, Object arg2) {
+    System.out.println(arg1.toString() + " " + arg2.toString());
+    return null;
+  }
+
+  public static Object puts(Object arg1, Object arg2, Object arg3) {
+    System.out.println(arg1.toString() + " " + arg2.toString() + " " +
+        arg3.toString());
+    return null;
+  }
+
+  public static Object puts(Object arg1, Object arg2, Object arg3, Object arg4) {
+    System.out.println(arg1.toString() + " " + arg2.toString() + " " +
+        arg3.toString() + " " + arg4.toString());
+    return null;
+  }
+
+  public static Object puts(Object arg1, Object arg2, Object arg3, Object arg4,
+      Object arg5)
+  {
+    System.out.println(arg1.toString() + " " + arg2.toString() + " " +
+        arg3.toString() + " " + arg4.toString() + " " + arg5.toString());
+    return null;
+  }
 }

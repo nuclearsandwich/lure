@@ -6,6 +6,8 @@ import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.intermediate.icodeimpl.*;
 import forkbomb.intermediate.ICodeFactory;
 
+import static forkbomb.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
+
 /* Walks a Lure abstract syntax tree and transforms it into
  * an ICode representation. */
 public class LureASTParser implements LureParserVisitor {
@@ -15,6 +17,7 @@ public class LureASTParser implements LureParserVisitor {
 
   public ICodeNode parse(SimpleNode root) {
     symbolTable = SymTabFactory.createSymTabStack();
+    Predefined.initialize(symbolTable);
     root.jjtAccept(this, null);
     return newRoot;
   }
@@ -86,7 +89,19 @@ public class LureASTParser implements LureParserVisitor {
   }
 
   public Object visit(ASTFunctionInvocationExpression node, Object data) {
-    return null;
+    ICodeNode fun = ICodeFactory.createICodeNode(CALL);
+    SimpleNode funAccess = (SimpleNode)node.jjtGetChild(0);
+    SymTabEntry e = symbolTable.lookupLocal((String)funAccess.jjtGetValue());
+
+    if (e.getDefinition() == DefinitionImpl.BUILTIN_FUNCTION) {
+      fun.setAttribute(ICodeKeyImpl.VALUE, e.getAttribute(SymTabKeyImpl.FUNCTION_SLUG));
+      fun.setAttribute(ICodeKeyImpl.ID, e.getIndex());
+    }
+
+    for (int i = 1; i < node.jjtGetNumChildren(); i++) {
+      fun.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
+    }
+    return fun;
   }
 
   public Object visit(ASTVariableAccess node, Object data) {
@@ -94,6 +109,6 @@ public class LureASTParser implements LureParserVisitor {
     SymTabEntry e = symbolTable.lookupLocal((String)node.jjtGetValue());
     access.setAttribute(ICodeKeyImpl.VALUE, e.getName());
     access.setAttribute(ICodeKeyImpl.ID, e.getIndex());
-    return null;
+    return access;
   }
 }

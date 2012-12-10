@@ -11,15 +11,14 @@ import wci.intermediate.Definition;
  */
 public enum DefinitionImpl implements Definition
 {
-  CONSTANT, VARIABLE, FIELD, UNDEFINED;
+  CONSTANT, VARIABLE, FIELD, UNDEFINED, BUILTIN_FUNCTION;
 
   private String text;
 
   /**
    * Constructor.
    */
-  DefinitionImpl()
-  {
+  DefinitionImpl() {
     this.text = this.toString().toLowerCase();
   }
 
@@ -27,8 +26,7 @@ public enum DefinitionImpl implements Definition
    * Constructor.
    * @param text the text for the definition code.
    */
-  DefinitionImpl(String text)
-  {
+  DefinitionImpl(String text) {
     this.text = text;
   }
 
@@ -36,8 +34,7 @@ public enum DefinitionImpl implements Definition
    * Getter.
    * @return the text of the definition code.
    */
-  public String getText()
-  {
+  public String getText() {
     return text;
   }
 }

@@ -27,13 +27,16 @@ public class Predefined {
   public static SymTabEntry trueId;
   public static SymTabEntry nilId;
 
+  // Builtin global functions.
+  public static SymTabEntry putsId;
+
   /**
    * Initialize a symbol table stack with predefined identifiers.
    * @param symTab the symbol table stack to initialize.
    */
   public static void initialize(SymTabStack symTabStack) {
     initializeConstants(symTabStack);
-    initializeStandardRoutines(symTabStack);
+    initializeStandardFunctions(symTabStack);
   }
 
   /**
@@ -64,23 +67,10 @@ public class Predefined {
    * Initialize the standard procedures and functions.
    * @param symTabStack the symbol table stack to initialize.
    */
-  private static void initializeStandardRoutines(SymTabStack symTabStack) {
-  }
-
-  /**
-   * Enter a standard procedure or function into the symbol table stack.
-   * @param symTabStack the symbol table stack to initialize.
-   * @param defn either PROCEDURE or FUNCTION.
-   * @param name the procedure or function name.
-   */
-  private static SymTabEntry enterStandard(SymTabStack symTabStack,
-      Definition defn, String name,
-      RoutineCode routineCode)
-  {
-    SymTabEntry procId = symTabStack.enterLocal(name);
-    procId.setDefinition(defn);
-    procId.setAttribute(ROUTINE_CODE, routineCode);
-
-    return procId;
+  private static void initializeStandardFunctions(SymTabStack symTabStack) {
+    putsId = symTabStack.enterLocal("puts");
+    putsId.setDefinition(DefinitionImpl.BUILTIN_FUNCTION);
+    putsId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.FUNCTION));
+    putsId.setAttribute(FUNCTION_SLUG, "lure/lang/Globals/puts");
   }
 }

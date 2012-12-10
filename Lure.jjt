@@ -8,6 +8,8 @@ options {
 PARSER_BEGIN(LureParser)
   package forkbomb.frontend;
 
+  import java.util.ArrayList;
+
   import wci.intermediate.ICodeNode;
   import forkbomb.backend.LureCompiler;
 
@@ -200,9 +202,16 @@ void FunctionInteriorExpression() #void : {}
   Expression()
 }
 
-void ArgumentList() : {}
+SimpleNode ArgumentList() : { ArrayList<String> parameterList = new ArrayList<String>();}
 {
-  "(" ( <IDENTIFIER> ( "," <IDENTIFIER> )* )? ")"
+  "(" ( <IDENTIFIER> {
+    parameterList.add(token.image);
+  } ( "," <IDENTIFIER> {
+    parameterList.add(token.image);
+  } )* )? ")" {
+    jjtThis.jjtSetValue(parameterList);
+    return jjtThis;
+  }
 }
 
 void FunctionInvocationExpression() : {}
@@ -216,6 +225,7 @@ SimpleNode VariableAccess() : {}
 {
   { enter("VARIABLEACCESS"); }
     <IDENTIFIER> {
+      jjtThis.jjtSetValue(token.image);
       return jjtThis;
     }
   { leave("VARIABLEACCESS"); }
