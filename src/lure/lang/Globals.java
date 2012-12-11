@@ -12,7 +12,7 @@ public class Globals {
     return arg1.equals(arg2);
   }
 
-  public static Object notequals(Object arg1, Object arg2) {
+  public static Object nequals(Object arg1, Object arg2) {
     return !arg1.equals(arg2);
   }
 
