@@ -2,24 +2,40 @@ package forkbomb.util;
 
 public class Mercury {
 
+  public enum Level {
+    FATAL, WARN, INFO, DEBUG;
+  }
+
   public static void fatal(String message) {
     errOut("FATAL: ", message);
     System.exit(1);
   }
 
   public static void warn(String message) {
-    errOut("WARN: ", message);
+    if (level.ordinal() >= Level.WARN.ordinal()) {
+      errOut("WARN: ", message);
+    }
   }
 
   public static void info(String message) {
-    errOut("INFO: ", message);
+    if (level.ordinal() >= Level.INFO.ordinal()) {
+      errOut("INFO: ", message);
+    }
   }
 
   public static void debug(String message) {
-    errOut("DEBUB: ", message);
+    if (level.ordinal() >= Level.DEBUG.ordinal()) {
+      errOut("DEBUB: ", message);
+    }
+  }
+
+  public static void setLevel(Level aLevel) {
+    level = aLevel;
   }
 
   private static void errOut(String prefix, String message) {
     System.err.println(prefix + message);
   }
+
+  private static Level level = Level.WARN;
 }
