@@ -30,6 +30,16 @@ public class Predefined {
   // Builtin global functions.
   public static SymTabEntry putsId;
   public static SymTabEntry plusId;
+  public static SymTabEntry minusId;
+  public static SymTabEntry starId;
+  public static SymTabEntry slashId;
+  public static SymTabEntry equalsId;
+  public static SymTabEntry nequalsId;
+  /* XXX PENDING */
+  public static SymTabEntry gtId;
+  public static SymTabEntry ltId;
+  public static SymTabEntry gteId;
+  public static SymTabEntry lteId;
 
   /**
    * Initialize a symbol table stack with predefined identifiers.
@@ -71,6 +81,11 @@ public class Predefined {
   private static void initializeStandardFunctions(SymTabStack symTabStack) {
     putsId = enterBuiltin(symTabStack, "puts", "lure/lang/Globals/puts");
     plusId = enterBuiltin(symTabStack, "+", "lure/lang/Globals/plus");
+    minusId = enterBuiltin(symTabStack, "-", "lure/lang/Globals/minus");
+    starId = enterBuiltin(symTabStack, "*", "lure/lang/Globals/star");
+    slashId = enterBuiltin(symTabStack, "/", "lure/lang/Globals/slash");
+    equalsId = enterBuiltin(symTabStack, "=", "lure/lang/Globals/slash");
+    nequalsId = enterBuiltin(symTabStack, "!=", "lure/lang/Globals/slash");
   }
 
   private static SymTabEntry enterBuiltin(SymTabStack stack, String name, String slug) {

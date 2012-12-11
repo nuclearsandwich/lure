@@ -6,23 +6,24 @@ Parser
 Intermediate
 	- Fix type checker
 		- Add type futures/dependent types
-	- Set up Lure-friendly ICode implementation
+  - Add Arity checking
+	- DONE Set up Lure-friendly ICode implementation
 
 Backend
 	- Use java/util/ArrayList<Object> as Array implementation
 	- Use java/lang/Object as Record implementation
-	- Write a code generating compiler
-	- Write a standard library with
-		- +(1..5)
-		- -(1..5)
-		- *(1..5)
-		- /(1..5)
-		- =(1..5) #invokevirtual java/lang/Object/equals(Ljava/lang/Object);Z (I hope)
-		- >(1..5)
-		- <(1..5)
-		- >=(1..5)
-		- <=(1..5)
-		- !=(1..5)
+	- WIP Write a code generating compiler
+	- WIP Write a standard library with
+		- DONE +(1..5)
+		- DONE -(1..5)
+		- DONE *(1..5)
+		- DONE /(1..5)
+		- DONE =(2) #invokevirtual java/lang/Object/equals(Ljava/lang/Object);Z (I hope)
+		- DONE >2()
+		- <(2)
+		- >=(2)
+		- <=(2)
+		- !=(2)
 		- str.
 			- cat(1..5)
 			- conv(1) #invokevirtual java/lang/Object/toString()Ljava/lang/String;
