@@ -12,15 +12,16 @@ PARSER_BEGIN(LureParser)
 
   import wci.intermediate.ICodeNode;
   import forkbomb.backend.LureCompiler;
+  import forkbomb.util.Mercury;
 
   public class LureParser {
-
     public static void main(String[] args) {
       try {
         /* Lure Parser reads the filename from the first argument. */
         LureParser parser = new LureParser(new java.io.FileInputStream(args[0]));
         SimpleNode script = parser.Script();
         script.dump(">");
+        Mercury.setLevel(Mercury.Level.DEBUG);
         LureASTParser ast = new LureASTParser();
         ICodeNode root = ast.parse(script);
         LureCompiler compiler = new LureCompiler();
@@ -33,27 +34,6 @@ PARSER_BEGIN(LureParser)
       }
     }
 
-    private static void visit(String construct) {
-      if (noisy) {
-        for (int i = 0; i <= nesting; i++) System.out.print("  ");
-        System.out.println(construct + ": Visiting");
-      }
-    }
-
-    private static void enter(String construct) {
-      if (noisy) {
-        for (int i = 0; i <= nesting; i++) System.out.print("  ");
-        System.out.println(construct + ": Entering");
-        nesting++;
-      }
-    }
-    private static void leave(String construct) {
-      if (noisy) {
-        for (int i = 0; i <= nesting; i++) System.out.print("  ");
-        System.out.println(construct + ": Leaving");
-        nesting--;
-      }
-    }
     private static int nesting = 0;
     private static boolean noisy = false;
   }
@@ -104,9 +84,7 @@ TOKEN: {
 
 SimpleNode Script() : {}
 {
-  { enter("SCRIPT"); }
   ( Expression() )+ <EOF>
-  { leave("SCRIPT"); }
   { return jjtThis; }
 }
 
@@ -117,30 +95,24 @@ void Expression() #void : {}
 
 SimpleNode ConditionalExpression() : {}
 {
-  { enter("CONDITIONAL"); }
-  <IF> Expression() <THEN> Expression() ( <ELSE> Expression() { visit("ELSE"); })? <END> {
+  <IF> Expression() <THEN> Expression() ( <ELSE> Expression() )? <END> {
     return jjtThis;
   }
-  { leave("CONDITIONAL"); }
 
 }
 
 SimpleNode LoopExpression() : {}
 {
-  { enter("LOOP"); }
   <LOOP> <DO> ( LoopInteriorExpression() )* <END> {
     return jjtThis;
   }
-  { leave("LOOP"); }
 }
 
 SimpleNode WhileExpression() : {}
 {
-  { enter("WHILE"); }
   <WHILE> Expression() <DO> ( LoopInteriorExpression() )* <END> {
     return jjtThis;
   }
-  { leave("WHILE"); }
 }
 
 void LoopInteriorExpression() #void : {}
@@ -159,12 +131,10 @@ SimpleNode Number() : {}
 
 SimpleNode String() : { StringBuilder builder = new StringBuilder(); }
 {
-  { enter("STRING"); }
   <QUOTE> (StringCharacter(builder))* <ENDQUOTE> {
   jjtThis.jjtSetValue(builder.toString());
   return jjtThis;
   }
-  { leave("STRING"); }
 }
 
 void StringCharacter(StringBuilder builder) #void : { Token t; }
@@ -175,14 +145,12 @@ void StringCharacter(StringBuilder builder) #void : { Token t; }
 
 SimpleNode AssignmentExpression() : {Token identifier;}
 {
-  { enter("ASSIGNMENT"); }
     identifier = <IDENTIFIER>
       <ASSIGN> Expression() {
       jjtThis.jjtSetValue(identifier.image);
       return jjtThis;
     }
 
-  { leave("ASSIGNMENT"); }
 }
 
 void FunctionStart() #void : {}
@@ -192,9 +160,7 @@ void FunctionStart() #void : {}
 
 void FunctionLiteralExpression() : {}
 {
-  { enter("FUNCTION"); }
   FunctionStart() ArgumentList() "{" ( FunctionInteriorExpression() )* "}"
-  { leave("FUNCTION"); }
 }
 
 void FunctionInteriorExpression() #void : {}
@@ -216,17 +182,13 @@ SimpleNode ArgumentList() : { ArrayList<String> parameterList = new ArrayList<St
 
 void FunctionInvocationExpression() : {}
 {
-  { enter("INVOCATION"); }
   VariableAccess() "(" ( Expression() ( "," Expression() )? )? ")"
-  { leave("INVOCATION"); }
 }
 
 SimpleNode VariableAccess() : {}
 {
-  { enter("VARIABLEACCESS"); }
     <IDENTIFIER> {
       jjtThis.jjtSetValue(token.image);
       return jjtThis;
     }
-  { leave("VARIABLEACCESS"); }
 }
