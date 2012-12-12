@@ -20,6 +20,17 @@ public class JasminInstructor implements Instructor {
     writeClassHeader();
   }
 
+  public JasminInstructor(String className, String superClass) {
+    this.className = className;
+    this.superClass = superClass;
+    try {
+      outputWriter = new FileWriter(fileName());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    writeClassHeader();
+  }
+
   public void _new(String classSpec) {
     write("new", classSpec);
   }
@@ -40,12 +51,20 @@ public class JasminInstructor implements Instructor {
     write("astore", ((Integer)i).toString());
   }
 
+  public void dup() {
+    write("dup");
+  }
+
   public void end_method() {
     write(".end method");
   }
 
   public void getstatic(String descriptor, String classSpec) {
     write("getstatic", descriptor, classSpec);
+  }
+
+  public void invokenonvirtual(String methodSpec) {
+    write("invokenonvirtual", methodSpec);
   }
 
   public void invokespecial(String methodSpec) {
@@ -112,7 +131,8 @@ public class JasminInstructor implements Instructor {
   }
 
   private String fileName() {
-    return outputDirectory + File.separator + className + EXT;
+    String[] baseNames = className.split("/");
+    return outputDirectory + File.separator + baseNames[baseNames.length - 1] + EXT;
   }
 
   private void writeClassHeader() {

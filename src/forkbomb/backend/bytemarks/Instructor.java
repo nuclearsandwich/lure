@@ -6,9 +6,11 @@ public interface Instructor {
   public void aload(int i);
   public void areturn();
   public void astore(int i);
+  public void dup();
   public void end_method();
   public void finish();
   public void getstatic(String descriptor, String classSpec);
+  public void invokenonvirtual(String methodSpec);
   public void invokespecial(String methodSpec);
   public void invokestatic(String methodSpec);
   public void invokevirtual(String methodSpec);

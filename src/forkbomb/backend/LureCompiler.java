@@ -4,6 +4,7 @@ import forkbomb.backend.bytemarks.*;
 import wci.intermediate.*;
 import forkbomb.intermediate.icodeimpl.*;
 import forkbomb.util.Mercury;
+import lure.LureConstants;
 
 import static forkbomb.intermediate.icodeimpl.ICodeKeyImpl.*;
 
@@ -33,7 +34,8 @@ public class LureCompiler {
     }
 
     public void generate() {
-      Mercury.debug("Generating " + node.toString() + node.getAttribute(VALUE).toString());
+      Mercury.debug("Generating " + node.toString() + " " +
+          node.getAttribute(VALUE).toString());
       switch((ICodeNodeTypeImpl)node.getType()) {
         case SCRIPT:
           generateScript();
@@ -52,6 +54,10 @@ public class LureCompiler {
           return;
         case CALL:
           generateCall();
+          return;
+        case FUNCTION:
+          generateFunction();
+          return;
       }
     }
 
@@ -96,13 +102,51 @@ public class LureCompiler {
     private void generateCall() {
       String slug = (String)node.getAttribute(VALUE);
       int arity = node.getChildren().size();
+      /* Check if user defined or builtin and invoke virtual or static
+       * accordingly.
+       */
+      if (slug.equals("lure/lang/Function/call")) {
+        instructor.aload((Integer)node.getAttribute(ID));
+        for (ICodeNode arg : node.getChildren()) {
+          (new Generator(arg)).generate();
+        }
+        instructor.invokevirtual(methodSignature(slug, arity));
+      } else {
+        for (ICodeNode arg : node.getChildren()) {
+          (new Generator(arg)).generate();
+        }
+        instructor.invokestatic(methodSignature(slug, arity));
+      }
+    }
 
-      for (ICodeNode arg : node.getChildren()) {
-        (new Generator(arg)).generate();
+    private void generateFunction() {
+      /* Set up separate instructor for Function sublass. */
+      Instructor mainInstructor = instructor;
+      String className = (String)node.getAttribute(VALUE);
+      instructor = new JasminInstructor(className, "lure/lang/Function");
+      instructor.public_method("<init>()V");
+      instructor.aload(0);
+      instructor.invokenonvirtual("lure/lang/Function/<init>()V");
+      instructor._return();
+      instructor.end_method();
+      instructor.public_method(methodSignature("call", 1));
+      /* for the length of the call method, local0 is `this` ignore it. */
+      instructor.limit_stack(32);
+      instructor.limit_locals(32);
+      for (ICodeNode n : node.getChildren()) {
+        (new Generator(n)).generate();
       }
 
-      Mercury.debug("Invoking static method " + slug + " with arity " + arity);
-      instructor.invokestatic(methodSignature(slug, arity));
+      /* Restore original instructor. */
+      instructor.areturn();
+      instructor.end_method();
+      instructor.finish();
+      instructor = mainInstructor;
+      /* XXX Leave reference to class on stack. */
+      instructor._new(className);
+      instructor.dup();
+      instructor.invokespecial(className + "/<init>()V");
+      /* pop symbol table */
     }
 
     /* Helpers */

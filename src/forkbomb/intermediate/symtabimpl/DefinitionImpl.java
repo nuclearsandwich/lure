@@ -11,7 +11,7 @@ import wci.intermediate.Definition;
  */
 public enum DefinitionImpl implements Definition
 {
-  CONSTANT, VARIABLE, FIELD, UNDEFINED, BUILTIN_FUNCTION;
+  CONSTANT, VARIABLE, FIELD, UNDEFINED, BUILTIN_FUNCTION, FUNCTION;
 
   private String text;
 
