@@ -76,7 +76,7 @@ public class JasminInstructor implements Instructor {
   }
 
   public void ifne(String label) {
-    write("ifeq", label);
+    write("ifne", label);
   }
 
   public void invokenonvirtual(String methodSpec) {

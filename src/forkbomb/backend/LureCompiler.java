@@ -177,6 +177,7 @@ public class LureCompiler {
       /* Generate label names for true and false/ */
       String truthyLabel = nextLabel(), falsyLabel = nextLabel();
 
+      Mercury.debug("Generating " + children.size() + "-clause conditional");
       if (children.size() == 3) /* has an else clause */ {
         instructor.ifeq(truthyLabel);
         /* code for the else clause follows in case of fall through. */
