@@ -22,8 +22,8 @@ public class LureCompiler {
   }
 
   public void compile(ICodeNode root) {
-    if (System.getenv("CLASSPATH") != null) {
-      JasminInstructor.setOutputDirectory(System.getenv("CLASSPATH"));
+    if (System.getenv("LUREPATH") != null) {
+      JasminInstructor.setOutputDirectory(System.getenv("LUREPATH"));
     }
     instructor = new JasminInstructor((String)root.getAttribute(VALUE));
     globalLabeCounter = 0;
