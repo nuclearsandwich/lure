@@ -3,7 +3,7 @@ package forkbomb.intermediate.symtabimpl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.HashMap;
 
 import wci.intermediate.*;
 import forkbomb.intermediate.SymTabFactory;
@@ -16,14 +16,17 @@ import forkbomb.intermediate.SymTabFactory;
  * <p>Copyright (c) 2012 by Steven! Ragnarök</p>
  */
 public class SymTabImpl
-  extends TreeMap<String, SymTabEntry>
   implements SymTab
 {
   private int nestingLevel;
+  private ArrayList<SymTabEntry> entries;
+  private HashMap<String, Integer> table;
 
   public SymTabImpl(int nestingLevel)
   {
     this.nestingLevel = nestingLevel;
+    entries = new ArrayList();
+    table = new HashMap();
   }
 
   /**
@@ -43,7 +46,10 @@ public class SymTabImpl
   public SymTabEntry enter(String name)
   {
     SymTabEntry entry = SymTabFactory.createSymTabEntry(name, this);
-    put(name, entry);
+    entries.add(entry);
+    int index = entries.size() - 1;
+    table.put(name, index);
+    entry.setIndex(index);
 
     return entry;
   }
@@ -55,7 +61,8 @@ public class SymTabImpl
    */
   public SymTabEntry lookup(String name)
   {
-    return get(name);
+    int index = table.get(name);
+    return entries.get(index);
   }
 
   /**
@@ -63,15 +70,6 @@ public class SymTabImpl
    */
   public ArrayList<SymTabEntry> sortedEntries()
   {
-    Collection<SymTabEntry> entries = values();
-    Iterator<SymTabEntry> iter = entries.iterator();
-    ArrayList<SymTabEntry> list = new ArrayList<SymTabEntry>(size());
-
-    // Iterate over the sorted entries and append them to the list.
-    while (iter.hasNext()) {
-      list.add(iter.next());
-    }
-
-    return list;  // sorted list of entries
+    return entries;
   }
 }
