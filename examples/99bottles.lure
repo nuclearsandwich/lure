@@ -1,11 +1,23 @@
 # 99 Bottles of beer on the wall.
-
 bottles := 99
-puts(bottles, 'bottles of beer on the wall')
-puts(bottles, 'bottles of beer')
-puts('')
 
-bottles := -(bottles, 1)
-puts('take one down')
-puts('pass it around')
-puts(bottles, 'bottles of beer on the wall')
+chorus := function (bottles) {
+  puts(bottles, 'bottles of beer on the wall')
+  puts(bottles, 'bottles of beer')
+  puts('')
+}
+
+verse := function (bottles) {
+  newBottles := -(bottles, 1)
+  puts('take one down')
+  puts('pass it around')
+  puts(newBottles, 'bottles of beer on the wall')
+  puts('')
+  puts('')
+  newBottles
+}
+
+while >(bottles, 90) do
+  chorus(bottles)
+  bottles := verse(bottles)
+end
