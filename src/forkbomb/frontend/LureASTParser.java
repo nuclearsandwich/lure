@@ -57,10 +57,6 @@ public class LureASTParser implements LureParserVisitor {
     return ifn;
   }
 
-  public Object visit(ASTLoopExpression node, Object data) {
-    return null;
-  }
-
   public Object visit(ASTWhileExpression node, Object data) {
     ICodeNode hwhile = ICodeFactory.createICodeNode(LOOP);
     for (int i = 0; i < node.jjtGetNumChildren(); i++) {

@@ -90,7 +90,7 @@ SimpleNode Script() : {}
 
 void Expression() #void : {}
 {
-  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | LoopExpression() | VariableAccess() | Number() | String() )
+  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | VariableAccess() | Number() | String() )
 }
 
 SimpleNode ConditionalExpression() : {}
@@ -99,13 +99,6 @@ SimpleNode ConditionalExpression() : {}
     return jjtThis;
   }
 
-}
-
-SimpleNode LoopExpression() : {}
-{
-  <LOOP> <DO> ( LoopInteriorExpression() )* <END> {
-    return jjtThis;
-  }
 }
 
 SimpleNode WhileExpression() : {}
