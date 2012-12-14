@@ -62,7 +62,13 @@ public class LureASTParser implements LureParserVisitor {
   }
 
   public Object visit(ASTWhileExpression node, Object data) {
-    return null;
+    ICodeNode hwhile = ICodeFactory.createICodeNode(LOOP);
+    for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+      ICodeNode n = (ICodeNode)node.jjtGetChild(i).jjtAccept(this, null);
+      hwhile.addChild(n);
+    }
+
+    return hwhile;
   }
 
   public Object visit(ASTString node, Object data) {
@@ -74,7 +80,11 @@ public class LureASTParser implements LureParserVisitor {
   public Object visit(ASTAssignmentExpression node, Object data) {
     ICodeNode assign = ICodeFactory.createICodeNode(ASSIGN);
     String varName = (String)node.jjtGetValue();
-    SymTabEntry e = symbolTable.enterLocal(varName);
+    /* check if re-assignment */
+    SymTabEntry e = symbolTable.lookupLocal(varName);
+    if (e == null) {
+      e = symbolTable.enterLocal(varName);
+    }
     assign.setAttribute(ICodeKeyImpl.VALUE, e);
 
     for (int i = 0; i < node.jjtGetNumChildren(); i++) {

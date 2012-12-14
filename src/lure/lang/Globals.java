@@ -196,6 +196,22 @@ public class Globals {
     return null;
   }
 
+  public static Object gt(Object arg1, Object arg2) {
+    return ((Integer)arg1) > ((Integer)arg2);
+  }
+
+  public static Object gte(Object arg1, Object arg2) {
+    return ((Integer)arg1) >= ((Integer)arg2);
+  }
+
+  public static Object lt(Object arg1, Object arg2) {
+    return ((Integer)arg1) < ((Integer)arg2);
+  }
+
+  public static Object lte(Object arg1, Object arg2) {
+    return ((Integer)arg1) <= ((Integer)arg2);
+  }
+
   /** This function isn't defined in Lure, it's used by the code generator as
    * the truthiness test. Any value not null or false is truthy and tests
    * successful.

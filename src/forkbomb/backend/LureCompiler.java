@@ -64,6 +64,9 @@ public class LureCompiler {
         case IF:
           generateIf();
           return;
+        case LOOP:
+          generateLoop();
+          return;
       }
     }
 
@@ -192,6 +195,19 @@ public class LureCompiler {
       }
       /* no matter what we end with the falsey label jumping over truthy. */
       instructor.label(falsyLabel);
+    }
+
+    public void generateLoop() {
+      String testLabel = nextLabel(), endLabel = nextLabel();
+      instructor.label(testLabel);
+      (new Generator(node.getChildren().remove(0))).generate();
+      instructor.invokestatic(LureConstants.TEST_METHOD_SPEC);
+      instructor.ifne(endLabel);
+      for (ICodeNode n : node.getChildren()) {
+        (new Generator(n)).generate();
+      }
+      instructor._goto(testLabel);
+      instructor.label(endLabel);
     }
 
     /* Helpers */

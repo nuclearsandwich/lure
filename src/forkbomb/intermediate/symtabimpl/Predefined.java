@@ -86,6 +86,10 @@ public class Predefined {
     slashId = enterBuiltin(symTabStack, "/", "lure/lang/Globals/slash");
     equalsId = enterBuiltin(symTabStack, "=", "lure/lang/Globals/equals");
     nequalsId = enterBuiltin(symTabStack, "!=", "lure/lang/Globals/nequals");
+    gtId = enterBuiltin(symTabStack, ">", "lure/lang/Globals/gt");
+    gteId = enterBuiltin(symTabStack, ">=", "lure/lang/Globals/gte");
+    ltId = enterBuiltin(symTabStack, "<", "lure/lang/Globals/lt");
+    lteId = enterBuiltin(symTabStack, "<=", "lure/lang/Globals/lte");
   }
 
   private static SymTabEntry enterBuiltin(SymTabStack stack, String name, String slug) {
