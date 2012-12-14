@@ -1,17 +1,19 @@
 package forkbomb.backend;
 
+import java.util.ArrayList;
+
 import forkbomb.backend.bytemarks.*;
-import wci.intermediate.*;
 import forkbomb.intermediate.icodeimpl.*;
 import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.util.Mercury;
 import lure.LureConstants;
+import wci.intermediate.*;
 
 import static forkbomb.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 public class LureCompiler {
-  private ICodeNode rootNode, currentNode;
   private Instructor instructor;
+  private int globalLabeCounter;
 
   public void printICTree(ICodeNode root) {
     for (ICodeNode n : root.getChildren()) {
@@ -24,6 +26,7 @@ public class LureCompiler {
       JasminInstructor.setOutputDirectory(System.getenv("CLASSPATH"));
     }
     instructor = new JasminInstructor((String)root.getAttribute(VALUE));
+    globalLabeCounter = 0;
 
     (new Generator(root)).generate();
   }
@@ -162,13 +165,32 @@ public class LureCompiler {
     }
 
     public void generateIf() {
-      if (node.getChildren().size() > 3) {
+      ArrayList<ICodeNode> children = node.getChildren();
+      if (children.size() > 3) {
         Mercury.fatal("Dude, Conditional has too many kids.");
       }
-      /* Code to put test expression on the stack */
-      /* Invoke test method (returns 0 or 1) */
-      /* ifeq jump to truthy expression */
-      /* otherwise fall to falsy expression, then jump over truthy */
+
+      /* put test expression on the stack and test it */
+      (new Generator(children.get(0))).generate();
+      instructor.invokestatic(LureConstants.TEST_METHOD_SPEC);
+
+      /* Generate label names for true and false/ */
+      String truthyLabel = nextLabel(), falsyLabel = nextLabel();
+
+      if (children.size() == 3) /* has an else clause */ {
+        instructor.ifeq(truthyLabel);
+        /* code for the else clause follows in case of fall through. */
+        (new Generator(children.get(2))).generate();
+        instructor._goto(falsyLabel);
+        instructor.label(truthyLabel);
+        (new Generator(children.get(1))).generate();
+      } else /* no else clause */ {
+        /* in this case just jump over the truthy clause */
+        instructor.ifne(falsyLabel);
+        (new Generator(children.get(1))).generate();
+      }
+      /* no matter what we end with the falsey label jumping over truthy. */
+      instructor.label(falsyLabel);
     }
 
     /* Helpers */
@@ -182,5 +204,10 @@ public class LureCompiler {
       s.append(")Ljava/lang/Object;");
       return s.toString();
     }
+
+    private String nextLabel() {
+      return String.format(LABEL_FORMAT, globalLabeCounter++);
+    }
   }
+      private static final String LABEL_FORMAT = "L%03d";
 }

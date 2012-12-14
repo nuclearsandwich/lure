@@ -31,6 +31,10 @@ public class JasminInstructor implements Instructor {
     writeClassHeader();
   }
 
+  public void _goto(String label) {
+    write("goto", label);
+  }
+
   public void _new(String classSpec) {
     write("new", classSpec);
   }
@@ -67,7 +71,12 @@ public class JasminInstructor implements Instructor {
     write("getstatic", descriptor, classSpec);
   }
 
-  public void label(String labelName) {
+  public void ifeq(String label) {
+    write("ifeq", label);
+  }
+
+  public void ifne(String label) {
+    write("ifeq", label);
   }
 
   public void invokenonvirtual(String methodSpec) {
@@ -84,6 +93,10 @@ public class JasminInstructor implements Instructor {
 
   public void invokevirtual(String methodSpec) {
     write("invokevirtual", methodSpec);
+  }
+
+  public void label(String labelName) {
+    writeLabel(labelName);
   }
 
   public void ldc(String s) {

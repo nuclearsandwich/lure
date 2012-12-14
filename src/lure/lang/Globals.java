@@ -195,4 +195,18 @@ public class Globals {
         arg3.toString() + " " + arg4.toString() + " " + arg5.toString());
     return null;
   }
+
+  /** This function isn't defined in Lure, it's used by the code generator as
+   * the truthiness test. Any value not null or false is truthy and tests
+   * successful.
+   * @param arg the result of the tested expression.
+   * @return 0 if the argument is truthy and 1 if falsy.
+   */
+  public static int test(Object arg) {
+    if (arg == null || arg == Boolean.FALSE) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 }

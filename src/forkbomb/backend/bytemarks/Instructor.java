@@ -1,6 +1,7 @@
 package forkbomb.backend.bytemarks;
 
 public interface Instructor {
+  public void _goto(String label);
   public void _new(String classSpec);
   public void _return();
   public void aload(int i);
@@ -11,6 +12,8 @@ public interface Instructor {
   public void end_method();
   public void finish();
   public void getstatic(String descriptor, String classSpec);
+  public void ifeq(String label);
+  public void ifne(String label);
   public void invokenonvirtual(String methodSpec);
   public void invokespecial(String methodSpec);
   public void invokestatic(String methodSpec);
