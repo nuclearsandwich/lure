@@ -90,7 +90,7 @@ SimpleNode Script() : {}
 
 void Expression() #void : {}
 {
-  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | VariableAccess() | Number() | String() )
+  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() | NewArray() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | VariableAccess() | Number() | String() )
 }
 
 SimpleNode ConditionalExpression() : {}
@@ -171,6 +171,11 @@ SimpleNode ArgumentList() : { ArrayList<String> parameterList = new ArrayList<St
     jjtThis.jjtSetValue(parameterList);
     return jjtThis;
   }
+}
+
+void NewArray(): {}
+{
+  "[" "]"
 }
 
 void FunctionInvocationExpression() : {}

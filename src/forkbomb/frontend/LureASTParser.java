@@ -126,6 +126,10 @@ public class LureASTParser implements LureParserVisitor {
     return null;
   }
 
+  public Object visit(ASTNewArray node, Object value) {
+    return ICodeFactory.createICodeNode(NEWARRAY);
+  }
+
   public Object visit(ASTFunctionInvocationExpression node, Object data) {
     ICodeNode fun = ICodeFactory.createICodeNode(CALL);
     SimpleNode funAccess = (SimpleNode)node.jjtGetChild(0);

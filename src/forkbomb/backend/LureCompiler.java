@@ -67,6 +67,9 @@ public class LureCompiler {
         case LOOP:
           generateLoop();
           return;
+        case NEWARRAY:
+          generateNewArray();
+          return;
       }
     }
 
@@ -208,6 +211,12 @@ public class LureCompiler {
       }
       instructor._goto(testLabel);
       instructor.label(endLabel);
+    }
+
+    public void generateNewArray() {
+      instructor._new("java/util/ArrayList");
+      instructor.dup();
+      instructor.invokespecial("java/util/ArrayList/<init>()V");
     }
 
     /* Helpers */
