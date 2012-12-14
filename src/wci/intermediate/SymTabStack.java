@@ -63,6 +63,13 @@ public interface SymTabStack
     public SymTabEntry enterLocal(String name);
 
     /**
+     * Create and enter a new entry into the global symbol table.
+     * @param name the name of the entry.
+     * @return the new entry.
+     */
+    public SymTabEntry enterGlobal(String name);
+
+    /**
      * Look up an existing symbol table entry in the local symbol table.
      * @param name the name of the entry.
      * @return the entry, or null if it does not exist.
@@ -75,4 +82,10 @@ public interface SymTabStack
      * @return the entry, or null if it does not exist.
      */
     public SymTabEntry lookup(String name);
+
+    /** Look up an existing symbol table entry from the bottom of the stack.
+     * @param name the name of the entry
+     * @return the entry, or null if it does not exist.
+     */
+    public SymTabEntry lookupGlobal(String name);
 }

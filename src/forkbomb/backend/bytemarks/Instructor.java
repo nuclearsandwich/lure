@@ -4,6 +4,7 @@ public interface Instructor {
   public void _new(String classSpec);
   public void _return();
   public void aload(int i);
+  public void aload_null();
   public void areturn();
   public void astore(int i);
   public void dup();
@@ -14,6 +15,7 @@ public interface Instructor {
   public void invokespecial(String methodSpec);
   public void invokestatic(String methodSpec);
   public void invokevirtual(String methodSpec);
+  public void label(String label);
   public void ldc(String s);
   public void ldc(float f);
   public void ldc(int i);

@@ -58,6 +58,14 @@ public class SymTabEntryImpl
   }
 
   /**
+   * Getter.
+   * @return the nesting level of the entry's parent symbol table.
+   */
+  public int getNestingLevel() {
+    return getSymTab().getNestingLevel();
+  }
+
+  /**
    * Setter. 
    * @param index the local variable array index.
    */
@@ -147,5 +155,9 @@ public class SymTabEntryImpl
   public Object getAttribute(SymTabKey key)
   {
     return get(key);
+  }
+
+  public boolean isGlobal() {
+    return getNestingLevel() == 0;
   }
 }

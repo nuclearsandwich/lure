@@ -43,6 +43,10 @@ public class JasminInstructor implements Instructor {
     write("aload", ((Integer)i).toString());
   }
 
+  public void aload_null() {
+    write("aload_null");
+  }
+
   public void areturn() {
     write("areturn");
   }
@@ -61,6 +65,9 @@ public class JasminInstructor implements Instructor {
 
   public void getstatic(String descriptor, String classSpec) {
     write("getstatic", descriptor, classSpec);
+  }
+
+  public void label(String labelName) {
   }
 
   public void invokenonvirtual(String methodSpec) {
@@ -113,6 +120,7 @@ public class JasminInstructor implements Instructor {
 
   public void write(String instruction, String... args) {
     StringBuilder s = new StringBuilder();
+    s.append(TAB);
     s.append(instruction);
     for (String str : args) {
       s.append(TAB);
@@ -121,6 +129,12 @@ public class JasminInstructor implements Instructor {
     s.append(EOL);
     try {
       outputWriter.write(s.toString());
+    } catch (IOException e) { e.printStackTrace(); }
+  }
+
+  public void writeLabel(String label) {
+    try {
+    outputWriter.write(label + ":\n");
     } catch (IOException e) { e.printStackTrace(); }
   }
 

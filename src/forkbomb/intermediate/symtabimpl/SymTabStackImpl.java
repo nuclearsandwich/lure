@@ -111,6 +111,16 @@ public class SymTabStackImpl
   }
 
   /**
+   * Create and enter a new entry into the global symbol table.
+   * @param name the name of the entry.
+   * @return the new entry.
+   */
+  public SymTabEntry enterGlobal(String name)
+  {
+    return get(0).enter(name);
+  }
+
+  /**
    * Look up an existing symbol table entry in the local symbol table.
    * @param name the name of the entry.
    * @return the entry, or null if it does not exist.
@@ -118,6 +128,16 @@ public class SymTabStackImpl
   public SymTabEntry lookupLocal(String name)
   {
     return get(currentNestingLevel).lookup(name);
+  }
+
+  /**
+   * Look up an existing symbol table entry in the global symbol table.
+   * @param name the name of the entry.
+   * @return the entry, or null if it does not exist.
+   */
+  public SymTabEntry lookupGlobal(String name)
+  {
+    return get(0).lookup(name);
   }
 
   /**

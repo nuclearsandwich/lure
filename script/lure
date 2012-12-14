@@ -1,4 +1,5 @@
 #!/bin/sh
+rm out/*
 export CLASSPATH=out
 java -cp bin forkbomb.frontend.LureParser $1 || exit 1
 jasmin out/*.j -d bin || exit 1

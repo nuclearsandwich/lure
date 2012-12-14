@@ -3,6 +3,7 @@ package forkbomb.backend;
 import forkbomb.backend.bytemarks.*;
 import wci.intermediate.*;
 import forkbomb.intermediate.icodeimpl.*;
+import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.util.Mercury;
 import lure.LureConstants;
 
@@ -34,8 +35,7 @@ public class LureCompiler {
     }
 
     public void generate() {
-      Mercury.debug("Generating " + node.toString() + " " +
-          node.getAttribute(VALUE).toString());
+      Mercury.debug("Generating " + node.toString());
       switch((ICodeNodeTypeImpl)node.getType()) {
         case SCRIPT:
           generateScript();
@@ -57,6 +57,9 @@ public class LureCompiler {
           return;
         case FUNCTION:
           generateFunction();
+          return;
+        case IF:
+          generateIf();
           return;
       }
     }
@@ -89,33 +92,43 @@ public class LureCompiler {
         Mercury.warn("Multiple children of ASSIGN");
       }
 
-      int index = (Integer)node.getAttribute(ID);
+      SymTabEntry e = (SymTabEntry)node.getAttribute(VALUE);
+
       /* Generate bytecode for the expression to be assigned. */
       (new Generator(node.getChildren().get(0))).generate();
-      instructor.astore(index);
+      instructor.astore(e.getIndex());
     }
 
     private void generateVariable() {
-      instructor.aload((Integer)node.getAttribute(ID));
+      SymTabEntry e = (SymTabEntry)node.getAttribute(VALUE);
+
+      if (e.isGlobal()) {
+        Mercury.warn("Globals not yet supported, loading null");
+        instructor.aload_null();
+      } else {
+        instructor.aload(e.getIndex());
+      }
     }
 
     private void generateCall() {
-      String slug = (String)node.getAttribute(VALUE);
+      SymTabEntry e = (SymTabEntry)node.getAttribute(VALUE);
       int arity = node.getChildren().size();
-      /* Check if user defined or builtin and invoke virtual or static
+      /* Check if user defined or global and invoke virtual or static
        * accordingly.
        */
-      if (slug.equals("lure/lang/Function/call")) {
-        instructor.aload((Integer)node.getAttribute(ID));
+      if (e.isGlobal()) {
         for (ICodeNode arg : node.getChildren()) {
           (new Generator(arg)).generate();
         }
-        instructor.invokevirtual(methodSignature(slug, arity));
+        instructor.invokestatic(
+          methodSignature((String)e.getAttribute(SymTabKeyImpl.FUNCTION_SLUG), arity));
       } else {
+        instructor.aload(e.getIndex());
         for (ICodeNode arg : node.getChildren()) {
           (new Generator(arg)).generate();
         }
-        instructor.invokestatic(methodSignature(slug, arity));
+        instructor.invokevirtual(
+            methodSignature(LureConstants.FUNCTION_CALL_SLUG, arity));
       }
     }
 
@@ -123,30 +136,39 @@ public class LureCompiler {
       /* Set up separate instructor for Function sublass. */
       Instructor mainInstructor = instructor;
       String className = (String)node.getAttribute(VALUE);
-      instructor = new JasminInstructor(className, "lure/lang/Function");
+      instructor = new JasminInstructor(className, LureConstants.FUNCTION_CLASS);
       instructor.public_method("<init>()V");
       instructor.aload(0);
-      instructor.invokenonvirtual("lure/lang/Function/<init>()V");
+      instructor.invokenonvirtual(LureConstants.FUNCTION_INIT);
       instructor._return();
       instructor.end_method();
-      instructor.public_method(methodSignature("call", 1));
-      /* for the length of the call method, local0 is `this` ignore it. */
+      // XXX LOLARITYCHECKINGWAHT?
+      instructor.public_method(
+          methodSignature(LureConstants.FUNCTION_METHOD_NAME, 1));
       instructor.limit_stack(32);
       instructor.limit_locals(32);
       for (ICodeNode n : node.getChildren()) {
         (new Generator(n)).generate();
       }
 
-      /* Restore original instructor. */
       instructor.areturn();
       instructor.end_method();
       instructor.finish();
+      /* Restore original instructor. */
       instructor = mainInstructor;
-      /* XXX Leave reference to class on stack. */
       instructor._new(className);
       instructor.dup();
       instructor.invokespecial(className + "/<init>()V");
-      /* pop symbol table */
+    }
+
+    public void generateIf() {
+      if (node.getChildren().size() > 3) {
+        Mercury.fatal("Dude, Conditional has too many kids.");
+      }
+      /* Code to put test expression on the stack */
+      /* Invoke test method (returns 0 or 1) */
+      /* ifeq jump to truthy expression */
+      /* otherwise fall to falsy expression, then jump over truthy */
     }
 
     /* Helpers */

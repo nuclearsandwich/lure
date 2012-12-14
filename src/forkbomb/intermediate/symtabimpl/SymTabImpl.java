@@ -61,8 +61,12 @@ public class SymTabImpl
    */
   public SymTabEntry lookup(String name)
   {
-    int index = table.get(name);
-    return entries.get(index);
+    if (table.containsKey(name)) {
+      int index = table.get(name);
+      return entries.get(index);
+    } else {
+      return null;
+    }
   }
 
   /**

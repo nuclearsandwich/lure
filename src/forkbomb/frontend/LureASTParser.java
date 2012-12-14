@@ -22,6 +22,7 @@ public class LureASTParser implements LureParserVisitor {
 
   public ICodeNode parse(SimpleNode root) {
     globalFunctionCounter = 0;
+    /* Nesting Level 0 is the Global scope */
     symbolTable = SymTabFactory.createSymTabStack();
     Predefined.initialize(symbolTable);
     root.jjtAccept(this, null);
@@ -35,6 +36,8 @@ public class LureASTParser implements LureParserVisitor {
   public Object visit(ASTScript node, Object data) {
     ICodeNode script = ICodeFactory.createICodeNode(SCRIPT);
     script.setAttribute(ICodeKeyImpl.VALUE, "LureMain");
+    /* push the main program scope */
+    symbolTable.push();
 
     for (int i = 0; i < node.jjtGetNumChildren(); i++) {
       ICodeNode n = (ICodeNode)node.jjtGetChild(i).jjtAccept(this, null);
@@ -51,7 +54,7 @@ public class LureASTParser implements LureParserVisitor {
       ifn.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
     }
 
-    return null;
+    return ifn;
   }
 
   public Object visit(ASTLoopExpression node, Object data) {
@@ -70,9 +73,10 @@ public class LureASTParser implements LureParserVisitor {
 
   public Object visit(ASTAssignmentExpression node, Object data) {
     ICodeNode assign = ICodeFactory.createICodeNode(ASSIGN);
-    SymTabEntry e = symbolTable.enterLocal((String)node.jjtGetValue());
-    assign.setAttribute(ICodeKeyImpl.VALUE, e.getName());
-    assign.setAttribute(ICodeKeyImpl.ID, e.getIndex());
+    String varName = (String)node.jjtGetValue();
+    SymTabEntry e = symbolTable.enterLocal(varName);
+    assign.setAttribute(ICodeKeyImpl.VALUE, e);
+
     for (int i = 0; i < node.jjtGetNumChildren(); i++) {
       assign.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
     }
@@ -92,16 +96,18 @@ public class LureASTParser implements LureParserVisitor {
     /* Because call is nonstatic, we have a pesky this referenced on the stack.
      * Assign it to a special identifier that we can ignore.
      */
-    SymTabEntry e = symbolTable.enterLocal("__this__");
-    Mercury.debug("Index of __this__: " + e.getIndex());
-    // Tempted to reload predefineds here instead of nonlocal lookup.
+    SymTabEntry e = symbolTable.enterLocal("__recur__");
+
+    // XXX Note arity somehow using typeimpl.
     Object args = node.jjtGetChild(0).jjtAccept(this, null);
+
     for (int i = 1; i < node.jjtGetNumChildren(); i++) {
       function.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
     }
+
     function.setAttribute(ICodeKeyImpl.VALUE, getNextFunctionClass());
     /* Restore symbol table */
-    symbolTable.pop();
+    SymTab s = symbolTable.pop();
     return function;
   }
 
@@ -109,7 +115,6 @@ public class LureASTParser implements LureParserVisitor {
     ArrayList<String> params = (ArrayList<String>)node.jjtGetValue();
     for (String p : params) {
       SymTabEntry e = symbolTable.enterLocal(p);
-      Mercury.debug("Index of " + e.getName() + ": " + e.getIndex());
     }
 
     return null;
@@ -118,19 +123,14 @@ public class LureASTParser implements LureParserVisitor {
   public Object visit(ASTFunctionInvocationExpression node, Object data) {
     ICodeNode fun = ICodeFactory.createICodeNode(CALL);
     SimpleNode funAccess = (SimpleNode)node.jjtGetChild(0);
-    SymTabEntry e = symbolTable.lookupLocal((String)funAccess.jjtGetValue());
+    String funName = (String)funAccess.jjtGetValue();
+    SymTabEntry e = symbolTable.lookupLocal(funName);
 
-    if (e == null) {
-      Mercury.fatal("No known value for identifier " + (String)funAccess.jjtGetValue());
+    if ((e == null) && ((e = symbolTable.lookupGlobal(funName)) == null)) {
+      Mercury.fatal("No known value for identifier " + funName);
     }
 
-    if (e.getDefinition() == DefinitionImpl.BUILTIN_FUNCTION) {
-      fun.setAttribute(ICodeKeyImpl.VALUE,
-          e.getAttribute(SymTabKeyImpl.FUNCTION_SLUG));
-    } else { //if (e.getDefinition() == DefinitionImpl.FUNCTION) {
-      fun.setAttribute(ICodeKeyImpl.VALUE, "lure/lang/Function/call");
-    }
-    fun.setAttribute(ICodeKeyImpl.ID, e.getIndex());
+    fun.setAttribute(ICodeKeyImpl.VALUE, e);
 
     for (int i = 1; i < node.jjtGetNumChildren(); i++) {
       fun.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
@@ -140,9 +140,12 @@ public class LureASTParser implements LureParserVisitor {
 
   public Object visit(ASTVariableAccess node, Object data) {
     ICodeNode access = ICodeFactory.createICodeNode(VARIABLE);
-    SymTabEntry e = symbolTable.lookupLocal((String)node.jjtGetValue());
-    access.setAttribute(ICodeKeyImpl.VALUE, e.getName());
-    access.setAttribute(ICodeKeyImpl.ID, e.getIndex());
+    String varName = (String)node.jjtGetValue();
+    SymTabEntry e = symbolTable.lookupLocal(varName);
+    if ((e == null) && ((e = symbolTable.lookupGlobal(varName)) == null)) {
+      Mercury.fatal("No known value for identifier " + varName);
+    }
+    access.setAttribute(ICodeKeyImpl.VALUE, e);
     return access;
   }
 

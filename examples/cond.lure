@@ -1,0 +1,15 @@
+cond := function (x) {
+  puts(x, 'was: ')
+  if x then
+    puts('    truthy')
+  else
+    puts('    falsy')
+  end
+}
+
+cond(=(5,5))
+cond(=(4,5))
+cond(5)
+cond(0)
+cond('hello')
+cond(=(9, 10))

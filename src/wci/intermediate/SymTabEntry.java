@@ -27,7 +27,13 @@ public interface SymTabEntry
      * @return the symbol table that contains this entry.
      */
     public SymTab getSymTab();
-    
+
+    /**
+     * Getter.
+     * @return the nesting level of the parent symbol table.
+     */
+    public int getNestingLevel();
+
     /**
      * Setter. 
      * @param index the local variable array index.
@@ -89,4 +95,10 @@ public interface SymTabEntry
      * @return the attribute value.
      */
     public Object getAttribute(SymTabKey key);
+
+    /**
+     * Check if the entry is global or local
+     * @return true if the entry is global and false otherwise.
+     */
+    public boolean isGlobal();
 }
