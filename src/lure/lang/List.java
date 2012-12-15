@@ -28,7 +28,7 @@ public class List implements LureObject {
       }
     });
     map.put("size", new Function() {
-      public Object call(Object arg) {
+      public Object call() {
         return list.size();
       }
     });

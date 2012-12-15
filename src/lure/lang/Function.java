@@ -2,6 +2,10 @@ package lure.lang;
 
 /* The base function class of a Lure function shim. */
 public class Function {
+  public Object call() throws ArityException {
+    throw new ArityException("Invalid argument count for " + this.getClass().getName());
+  }
+
   public Object call(Object arg1) throws ArityException {
     throw new ArityException("Invalid argument count for " + this.getClass().getName());
   }
