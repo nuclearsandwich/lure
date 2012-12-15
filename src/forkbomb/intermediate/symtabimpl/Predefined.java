@@ -46,39 +46,6 @@ public class Predefined {
    * @param symTab the symbol table stack to initialize.
    */
   public static void initialize(SymTabStack symTabStack) {
-    initializeConstants(symTabStack);
-    initializeStandardFunctions(symTabStack);
-  }
-
-  /**
-   * Initialize the predefined constant.
-   * @param symTabStack the symbol table stack to initialize.
-   */
-  private static void initializeConstants(SymTabStack symTabStack) {
-    // Constant value false.
-    falseId = symTabStack.enterLocal("false");
-    falseId.setDefinition(DefinitionImpl.VARIABLE);
-    falseId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.BOOLEAN));
-    falseId.setAttribute(CONSTANT_VALUE, false);
-
-    // Constant value true.
-    trueId = symTabStack.enterLocal("true");
-    trueId.setDefinition(DefinitionImpl.VARIABLE);
-    trueId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.BOOLEAN));
-    trueId.setAttribute(CONSTANT_VALUE, true);
-
-    // Constant value nil.
-    nilId = symTabStack.enterLocal("nil");
-    nilId.setDefinition(DefinitionImpl.VARIABLE);
-    nilId.setTypeSpec(new TypeSpecImpl(TypeFormImpl.NIL));
-    nilId.setAttribute(CONSTANT_VALUE, null);
-  }
-
-  /**
-   * Initialize the standard procedures and functions.
-   * @param symTabStack the symbol table stack to initialize.
-   */
-  private static void initializeStandardFunctions(SymTabStack symTabStack) {
     putsId = enterBuiltin(symTabStack, "puts", "lure/lang/Globals/puts");
     plusId = enterBuiltin(symTabStack, "+", "lure/lang/Globals/plus");
     minusId = enterBuiltin(symTabStack, "-", "lure/lang/Globals/minus");
@@ -90,6 +57,10 @@ public class Predefined {
     gteId = enterBuiltin(symTabStack, ">=", "lure/lang/Globals/gte");
     ltId = enterBuiltin(symTabStack, "<", "lure/lang/Globals/lt");
     lteId = enterBuiltin(symTabStack, "<=", "lure/lang/Globals/lte");
+
+    trueId = enterBuiltin(symTabStack, "true", "lure/lang/Globals/_true");
+    trueId = enterBuiltin(symTabStack, "false", "lure/lang/Globals/_false");
+    trueId = enterBuiltin(symTabStack, "nil", "lure/lang/Globals/_null");
   }
 
   private static SymTabEntry enterBuiltin(SymTabStack stack,

@@ -20,6 +20,9 @@ public class Globals {
   public static final Object star = new Star();
   public static final Object equals = new Equals();
   public static final Object nequals = new Nequals();
+  public static final Object _true = Boolean.TRUE;
+  public static final Object _false = Boolean.FALSE;
+  public static final Object _null = null;
 
   /** This function isn't defined in Lure, it's used by the code generator as
    * the truthiness test. Any value not null or false is truthy and tests
