@@ -33,6 +33,10 @@ public class Mercury {
     level = aLevel;
   }
 
+  public static Level getLevel() {
+    return level;
+  }
+
   private static void errOut(String prefix, String message) {
     System.err.println(prefix + message);
   }

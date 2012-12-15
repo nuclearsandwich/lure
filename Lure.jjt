@@ -20,8 +20,10 @@ PARSER_BEGIN(LureParser)
         /* Lure Parser reads the filename from the first argument. */
         LureParser parser = new LureParser(new java.io.FileInputStream(args[0]));
         SimpleNode script = parser.Script();
-        script.dump(">");
-        Mercury.setLevel(Mercury.Level.DEBUG);
+        Mercury.setLevel(Mercury.Level.WARN);
+        if (Mercury.getLevel().ordinal() > Mercury.Level.DEBUG.ordinal()) {
+          script.dump(">");
+        }
         LureASTParser ast = new LureASTParser();
         ICodeNode root = ast.parse(script);
         LureCompiler compiler = new LureCompiler();
