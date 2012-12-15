@@ -7,27 +7,36 @@ public class Puts extends lure.lang.Function {
   }
 
   public Object call(Object arg1, Object arg2) {
-    System.out.println(arg1.toString() + " " + arg2.toString());
+    System.out.println(nullStringWrap(arg1) + " " + nullStringWrap(arg2));
     return null;
   }
 
   public Object call(Object arg1, Object arg2, Object arg3) {
-    System.out.println(arg1.toString() + " " + arg2.toString() + " " +
+    System.out.println(nullStringWrap(arg1) + " " + nullStringWrap(arg2) + " " +
         arg3.toString());
     return null;
   }
 
   public Object call(Object arg1, Object arg2, Object arg3, Object arg4) {
-    System.out.println(arg1.toString() + " " + arg2.toString() + " " +
-        arg3.toString() + " " + arg4.toString());
+    System.out.println(nullStringWrap(arg1) + " " + nullStringWrap(arg2) + " " +
+        nullStringWrap(arg3) + " " + nullStringWrap(arg4));
     return null;
   }
 
   public Object call(Object arg1, Object arg2, Object arg3, Object arg4,
       Object arg5)
   {
-    System.out.println(arg1.toString() + " " + arg2.toString() + " " +
-        arg3.toString() + " " + arg4.toString() + " " + arg5.toString());
+    System.out.println(nullStringWrap(arg1) + " " + nullStringWrap(arg2) + " " +
+        nullStringWrap(arg3) + " " + nullStringWrap(arg4) + " " +
+        nullStringWrap(arg5));
     return null;
+  }
+
+  private static String nullStringWrap(Object o) {
+    if (o == null) {
+      return "nil";
+    } else {
+      return o.toString();
+    }
   }
 }
