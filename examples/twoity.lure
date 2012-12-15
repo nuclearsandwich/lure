@@ -1,0 +1,5 @@
+sum := function (x, y) {
+  +(x, y)
+}
+
+puts(sum(3, 4))

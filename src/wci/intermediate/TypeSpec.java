@@ -1,6 +1,4 @@
-package forkbomb.intermediate;
-
-import wci.intermediate.*;
+package wci.intermediate;
 
 /**
  * <h1>TypeSpec</h1>

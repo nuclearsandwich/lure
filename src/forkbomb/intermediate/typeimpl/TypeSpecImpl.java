@@ -3,9 +3,6 @@ package forkbomb.intermediate.typeimpl;
 import java.util.HashMap;
 
 import wci.intermediate.*;
-import forkbomb.intermediate.TypeForm;
-import forkbomb.intermediate.TypeKey;
-import forkbomb.intermediate.TypeSpec;
 import forkbomb.intermediate.symtabimpl.Predefined;
 
 import forkbomb.intermediate.typeimpl.TypeFormImpl;

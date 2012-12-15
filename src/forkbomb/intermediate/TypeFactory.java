@@ -1,6 +1,7 @@
 package forkbomb.intermediate;
 
 import forkbomb.intermediate.typeimpl.*;
+import wci.intermediate.*;
 
 /**
  * <h1>TypeFactory</h1>

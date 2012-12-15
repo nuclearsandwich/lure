@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import wci.intermediate.*;
 import forkbomb.intermediate.SymTabFactory;
+import forkbomb.intermediate.TypeFactory;
 import forkbomb.intermediate.symtabimpl.*;
 import forkbomb.intermediate.icodeimpl.*;
+import forkbomb.intermediate.typeimpl.*;
 import forkbomb.intermediate.ICodeFactory;
 import forkbomb.util.Mercury;
 import lure.LureConstants;
@@ -105,8 +107,11 @@ public class LureASTParser implements LureParserVisitor {
     SymTabEntry e = symbolTable.enterLocal("__recur__");
 
     // XXX Note arity somehow using typeimpl.
-    Object args = node.jjtGetChild(0).jjtAccept(this, null);
+    ArrayList<String> args = (ArrayList<String>)node.jjtGetChild(0).jjtAccept(this, null);
 
+    TypeSpec type = TypeFactory.createType(TypeFormImpl.FUNCTION);
+    type.setAttribute(TypeKeyImpl.ARITY, args.size());
+    ((ICodeNodeImpl)function).setTypeSpec(type);
     for (int i = 1; i < node.jjtGetNumChildren(); i++) {
       function.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
     }
@@ -123,7 +128,7 @@ public class LureASTParser implements LureParserVisitor {
       SymTabEntry e = symbolTable.enterLocal(p);
     }
 
-    return null;
+    return params;
   }
 
   public Object visit(ASTNewArray node, Object value) {

@@ -1,6 +1,6 @@
 package forkbomb.intermediate.typeimpl;
 
-import forkbomb.intermediate.TypeKey;
+import wci.intermediate.TypeKey;
 
 /**
  * <h1>TypeKeyImpl</h1>
@@ -11,8 +11,5 @@ import forkbomb.intermediate.TypeKey;
  */
 public enum TypeKeyImpl implements TypeKey
 {
-  VARIABLE,
-
-  // Record
-  RECORD_SYMTAB
+  ARITY;
 }

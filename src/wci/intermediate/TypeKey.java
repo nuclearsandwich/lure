@@ -1,4 +1,4 @@
-package forkbomb.intermediate;
+package wci.intermediate;
 
 /**
  * <h1>TypeKey</h1>

@@ -1,6 +1,6 @@
 package forkbomb.intermediate.typeimpl;
 
-import forkbomb.intermediate.TypeForm;
+import wci.intermediate.TypeForm;
 
 /**
  * <h1>TypeFormImpl</h1>

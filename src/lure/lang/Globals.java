@@ -25,6 +25,8 @@ public class Globals {
   public static final Object _null = null;
   public static final Object str = new Str();
   public static final Object _int = new Int();
+  public static final Object and = new And();
+  public static final Object or = new Or();
 
   /** This function isn't defined in Lure, it's used by the code generator as
    * the truthiness test. Any value not null or false is truthy and tests

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import forkbomb.backend.bytemarks.*;
 import forkbomb.intermediate.icodeimpl.*;
 import forkbomb.intermediate.symtabimpl.*;
+import forkbomb.intermediate.typeimpl.*;
 import forkbomb.util.Mercury;
 import lure.LureConstants;
 import wci.intermediate.*;
@@ -155,7 +156,8 @@ public class LureCompiler {
       instructor.end_method();
       // XXX LOLARITYCHECKINGWAHT?
       instructor.public_method(
-          methodSignature(LureConstants.FUNCTION_METHOD_NAME, 1));
+          methodSignature(LureConstants.FUNCTION_METHOD_NAME,
+            (Integer)((TypeSpecImpl)node.getType()).getAttribute(TypeKeyImpl.ARITY)));
       instructor.limit_stack(32);
       instructor.limit_locals(32);
       for (ICodeNode n : node.getChildren()) {
