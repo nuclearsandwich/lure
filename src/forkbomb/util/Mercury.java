@@ -25,7 +25,7 @@ public class Mercury {
 
   public static void debug(String message) {
     if (level.ordinal() >= Level.DEBUG.ordinal()) {
-      errOut("DEBUB: ", message);
+      errOut("DEBUG: ", message);
     }
   }
 
