@@ -14,6 +14,7 @@ public interface Instructor {
   public void getstatic(String descriptor, String classSpec);
   public void ifeq(String label);
   public void ifne(String label);
+  public void invokeinterface(String methodSpec, int arity);
   public void invokenonvirtual(String methodSpec);
   public void invokespecial(String methodSpec);
   public void invokestatic(String methodSpec);

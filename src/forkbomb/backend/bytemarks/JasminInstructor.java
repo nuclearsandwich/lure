@@ -79,6 +79,10 @@ public class JasminInstructor implements Instructor {
     write("ifne", label);
   }
 
+  public void invokeinterface(String methodSpec, int arity) {
+    write("invokeinterface", methodSpec, ((Integer)arity).toString());
+  }
+
   public void invokenonvirtual(String methodSpec) {
     write("invokenonvirtual", methodSpec);
   }
