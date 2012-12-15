@@ -90,7 +90,7 @@ SimpleNode Script() : {}
 
 void Expression() #void : {}
 {
-  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() | NewArray() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | VariableAccess() | Number() | String() )
+  (LOOKAHEAD(2) AssignmentExpression() | LOOKAHEAD(2) FunctionInvocationExpression() | NewArray() |  FunctionLiteralExpression() | ConditionalExpression() | WhileExpression() | Access() | Number() | String() )
 }
 
 SimpleNode ConditionalExpression() : {}
@@ -98,7 +98,6 @@ SimpleNode ConditionalExpression() : {}
   <IF> Expression() <THEN> Expression() ( <ELSE> Expression() )? <END> {
     return jjtThis;
   }
-
 }
 
 SimpleNode WhileExpression() : {}
@@ -130,10 +129,10 @@ SimpleNode String() : { StringBuilder builder = new StringBuilder(); }
   }
 }
 
-void StringCharacter(StringBuilder builder) #void : { Token t; }
+void StringCharacter(StringBuilder builder) #void : {}
 {
-  t = <STRING_CHAR>
-  { builder.append(t.image.charAt(0)); }
+  <STRING_CHAR>
+  { builder.append(token.image.charAt(0)); }
 }
 
 SimpleNode AssignmentExpression() : {Token identifier;}
@@ -180,7 +179,12 @@ void NewArray(): {}
 
 void FunctionInvocationExpression() : {}
 {
-  VariableAccess() "(" ( Expression() ( "," Expression() )? )? ")"
+  Access() "(" ( Expression() ( "," Expression() )? )? ")"
+}
+
+void Access() : {}
+{
+  VariableAccess() ( FieldAccess() )*
 }
 
 SimpleNode VariableAccess() : {}
@@ -189,4 +193,12 @@ SimpleNode VariableAccess() : {}
       jjtThis.jjtSetValue(token.image);
       return jjtThis;
     }
+}
+
+SimpleNode FieldAccess() : {}
+{
+  "." <IDENTIFIER> {
+    jjtThis.jjtSetValue(token.image);
+    return jjtThis;
+  }
 }
