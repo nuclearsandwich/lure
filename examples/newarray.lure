@@ -1,0 +1,11 @@
+a := []
+puts(a)
+
+a.add(1)
+a.add(2)
+
+puts(a)
+
+puts(+(a.get(0), 3))
+puts(a.size())
+

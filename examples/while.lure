@@ -1,0 +1,5 @@
+a := 9
+while >(a,0) do
+  puts('a is ', a)
+  a := -(a, 1)
+end

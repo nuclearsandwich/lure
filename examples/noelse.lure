@@ -1,0 +1,7 @@
+if =(4,4) then
+  puts('result!')
+end
+
+if =(3,4) then
+  puts('If this prints you lose')
+end
