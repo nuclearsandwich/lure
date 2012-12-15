@@ -1,33 +1,33 @@
 Parser
-	- Parse `[]` as empty list
+	- DONE Parse `[]` as empty list
 	- Parse `{}` as empty record
-	- Add record field access
+	- DONE Add record field access
+	- Add record field assignment
 
 Intermediate
-	- Fix type checker
-		- Add type futures/dependent types
-  - Add Arity checking
+	- Add type futures/dependent types
+	- Add Arity checking
 	- DONE Set up Lure-friendly ICode implementation
 
 Backend
-	- Use java/util/ArrayList<Object> as Array implementation
-	- Use java/lang/Object as Record implementation
-	- WIP Write a code generating compiler
-	- WIP Write a standard library with
+	- DONE Array implementation
+	- DONE Record implementation
+	- DONE Write a code generating compiler
+	- DONE  Write a standard library with
 		- DONE +(1..5)
 		- DONE -(1..5)
 		- DONE *(1..5)
 		- DONE /(1..5)
 		- DONE =(2) #invokevirtual java/lang/Object/equals(Ljava/lang/Object);Z (I hope)
 		- DONE >2()
-		- <(2)
-		- >=(2)
-		- <=(2)
-		- !=(2)
-		- str.
-			- cat(1..5)
-			- conv(1) #invokevirtual java/lang/Object/toString()Ljava/lang/String;
-			- split(2)
-		- int.
-			- parse(1) #invokestatic java/lang/Integer/parseInt(Ljava/lang/String;)I
+		- DONE <(2)
+		- DONE >=(2)
+		- DONE <=(2)
+		- DONE !=(2)
+		- DONE str.
+			- DONE cat(1..5)
+			- DONE conv(1) #invokevirtual java/lang/Object/toString()Ljava/lang/String;
+			- DONE split(2)
+		- DONE int.
+			- DONE parse(1) #invokestatic java/lang/Integer/parseInt(Ljava/lang/String;)I
 
