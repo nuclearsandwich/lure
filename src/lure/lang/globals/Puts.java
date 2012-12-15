@@ -1,5 +1,7 @@
 package lure.lang.globals;
 
+import static lure.lang.globals.Str.nullStringWrap;
+
 public class Puts extends lure.lang.Function {
   public Object call(Object arg1) {
     System.out.println(arg1);
@@ -30,13 +32,5 @@ public class Puts extends lure.lang.Function {
         nullStringWrap(arg3) + " " + nullStringWrap(arg4) + " " +
         nullStringWrap(arg5));
     return null;
-  }
-
-  private static String nullStringWrap(Object o) {
-    if (o == null) {
-      return "nil";
-    } else {
-      return o.toString();
-    }
   }
 }

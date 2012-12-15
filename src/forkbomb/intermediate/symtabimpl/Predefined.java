@@ -35,11 +35,12 @@ public class Predefined {
   public static SymTabEntry slashId;
   public static SymTabEntry equalsId;
   public static SymTabEntry nequalsId;
-  /* XXX PENDING */
   public static SymTabEntry gtId;
   public static SymTabEntry ltId;
   public static SymTabEntry gteId;
   public static SymTabEntry lteId;
+  public static SymTabEntry strId;
+  public static SymTabEntry intId;
 
   /**
    * Initialize a symbol table stack with predefined identifiers.
@@ -61,6 +62,8 @@ public class Predefined {
     trueId = enterBuiltin(symTabStack, "true", "lure/lang/Globals/_true");
     trueId = enterBuiltin(symTabStack, "false", "lure/lang/Globals/_false");
     trueId = enterBuiltin(symTabStack, "nil", "lure/lang/Globals/_null");
+    intId = enterBuiltin(symTabStack, "int", "lure/lang/Globals/_int");
+    intId = enterBuiltin(symTabStack, "str", "lure/lang/Globals/str");
   }
 
   private static SymTabEntry enterBuiltin(SymTabStack stack,

@@ -23,6 +23,8 @@ public class Globals {
   public static final Object _true = Boolean.TRUE;
   public static final Object _false = Boolean.FALSE;
   public static final Object _null = null;
+  public static final Object str = new Str();
+  public static final Object _int = new Int();
 
   /** This function isn't defined in Lure, it's used by the code generator as
    * the truthiness test. Any value not null or false is truthy and tests

@@ -1,62 +1,21 @@
-package lure.lang;
+package lure.lang.globals;
 
 import java.util.ArrayList;
+import lure.lang.globals.str.*;
 
-public class Str {
-  public static Object cat(ArrayList args) {
-    StringBuilder s = new StringBuilder();
-    for (Object str : args) {
-      s.append((String)str);
+public class Str extends lure.lang.Record {
+
+  public Str() {
+    _fieldSet("cat", new Cat());
+    _fieldSet("conv", new Conv());
+    _fieldSet("split", new Split());
+  }
+
+  public static String nullStringWrap(Object o) {
+    if (o == null) {
+      return "nil";
+    } else {
+      return o.toString();
     }
-    return s.toString();
-  }
-
-  public static Object cat(Object arg1, Object arg2) {
-    StringBuilder s = new StringBuilder();
-    s.append((String)arg1);
-    s.append((String)arg2);
-    return s.toString();
-  }
-
-
-  public static Object cat(Object arg1, Object arg2, Object arg3) {
-    StringBuilder s = new StringBuilder();
-    s.append((String)arg1);
-    s.append((String)arg2);
-    s.append((String)arg3);
-    return s.toString();
-  }
-
-  public static Object cat(Object arg1, Object arg2, Object arg3, Object arg4) {
-    StringBuilder s = new StringBuilder();
-    s.append((String)arg1);
-    s.append((String)arg2);
-    s.append((String)arg3);
-    s.append((String)arg4);
-    return s.toString();
-  }
-
-  public static Object cat(Object arg1, Object arg2, Object arg3, Object arg4,
-      Object arg5)
-  {
-    StringBuilder s = new StringBuilder();
-    s.append((String)arg1);
-    s.append((String)arg2);
-    s.append((String)arg3);
-    s.append((String)arg4);
-    s.append((String)arg5);
-    return s.toString();
-  }
-
-  public static Object conv(Object arg1) {
-    return arg1.toString();
-  }
-
-  public static ArrayList split(Object base, Object regex) {
-    ArrayList<Object> result = new ArrayList<Object>();
-    for (String s : ((String)base).split((String)regex)) {
-      result.add(s);
-    }
-    return result;
   }
 }

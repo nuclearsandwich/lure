@@ -1,7 +1,9 @@
-package lure.lang;
+package lure.lang.globals;
 
-public class Int {
-  public static Object parse(Object arg1) {
-    return Integer.parseInt((String)arg1);
+import lure.lang.globals._int.*;
+
+public class Int extends lure.lang.Record {
+  public Int() {
+    _fieldSet("parse", new Parse());
   }
 }

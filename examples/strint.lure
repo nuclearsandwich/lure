@@ -1,0 +1,5 @@
+x := str.cat('whone', 'htwo', 'hthree')
+
+puts(x)
+
+puts(+(5, int.parse('5')))
