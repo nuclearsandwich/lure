@@ -124,7 +124,6 @@ public class LureCompiler {
       SymTabEntry e = (SymTabEntry)node.getAttribute(VALUE);
 
       if (e.isGlobal()) {
-        Mercury.warn("Globals not yet supported, loading null");
         instructor.getstatic((String)e.getAttribute(SymTabKeyImpl.GLOBAL_FIELD_SPEC),
             "Ljava/lang/Object;");
       } else {
@@ -218,13 +217,13 @@ public class LureCompiler {
 
     public void generateField() {
       instructor.ldc((String)node.getAttribute(VALUE));
-      instructor.invokeinterface(LureConstants.OBJECT_GET_SPEC);
+      instructor.invokeinterface(LureConstants.OBJECT_GET_SPEC, 1);
     }
 
     public void generateNewArray() {
-      instructor._new("java/util/ArrayList");
+      instructor._new(LureConstants.LIST_CLASS_SPEC);
       instructor.dup();
-      instructor.invokespecial("java/util/ArrayList/<init>()V");
+      instructor.invokespecial(LureConstants.LIST_CLASS_SPEC + "/<init>()V");
     }
 
     /* Helpers */
