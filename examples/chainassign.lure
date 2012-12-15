@@ -1,0 +1,8 @@
+foo := bar := if =('yes', 'no') then
+                'Ayes have it'
+              else
+                'Contention'
+              end
+
+puts('foo', foo)
+puts('bar', bar)
