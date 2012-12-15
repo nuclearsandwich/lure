@@ -113,6 +113,8 @@ public class LureCompiler {
       /* Generate bytecode for the expression to be assigned. */
       (new Generator(node.getChildren().get(0))).generate();
       instructor.astore(e.getIndex());
+      /* For multiple assign/return, put the value back on the stack. */
+      instructor.aload(e.getIndex());
     }
 
     private void generateAccess() {

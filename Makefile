@@ -11,6 +11,9 @@ build: clean parser
 clean:
 	rm -rf bin
 
+argfile:
+	find src -name '*.java' > argfile
+
 
 runall: build
 	script/runall
