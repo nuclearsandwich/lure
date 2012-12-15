@@ -1,19 +1,24 @@
-rpnCalc := -> (operation, arguments) {
-  answer := if =('+', operation) then
-    +(arguments)
-  else if =('-', operation) then
-    -(arguments)
-  else if =('*', operation) then
-    *(arguments)
-  else if =('/', operation) then
-    /(arguments)
-  end
-  arguments.clear()
-  arguments.add(answer)
-}
-
 rpnEval := -> (expression) {
-  input := strsplit(' ')
+  rpnCalc := -> (operation, arguments) {
+    answer := if =('+', operation) then
+      +(arguments)
+    else
+      if =('-', operation) then
+        -(arguments)
+      else
+        if =('*', operation) then
+          *(arguments)
+        else
+          if =('/', operation) then
+            /(arguments)
+          end
+        end
+      end
+    end
+    arguments.clear()
+    arguments.add(answer)
+  }
+  values := str.split(' ')
   arglist := []
   i := 0
   while !=(0, values.size()) do
@@ -25,11 +30,11 @@ rpnEval := -> (expression) {
           =('/', top)) then
       rpnCalc(top, arglist)
     else
-      arglist.add(intparse(top)
+      arglist.add(int.parse(top))
     end
   end
 
-  strconv(arglist.get(0))
+  str.conv(arglist.get(0))
 }
 
 headerHtml := '
@@ -53,13 +58,13 @@ footerHtml := '
 
 get('/calc', -> (req, resp) {
   resp.status(200)
-  resp.body(strcat(headerHtml, formHtml, footerHtml))
+  resp.body(str.cat(headerHtml, formHtml, footerHtml))
 })
 
 get('/rpn', -> (req, resp) {
   expr := req.queryParams('expr')
   resp.status(200)
-  answer := strcat('<p>The result of ', expr, ' is ', rpnEval(expr), '</p>')
-  strcat(headerHtml, answer, formHtml, htmlFooter)
+  answer := str.cat('<p>The result of ', expr, ' is ', rpnEval(expr), '</p>')
+  str.cat(headerHtml, answer, formHtml, htmlFooter)
 })
 
