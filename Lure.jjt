@@ -179,7 +179,7 @@ void NewArray(): {}
 
 void FunctionInvocationExpression() : {}
 {
-  Access() "(" ( Expression() ( "," Expression() )? )? ")"
+  Access() "(" ( Expression() ( "," Expression() )* )? ")"
 }
 
 void Access() : {}
