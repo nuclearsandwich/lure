@@ -157,7 +157,7 @@ public class LureCompiler {
       // XXX LOLARITYCHECKINGWAHT?
       instructor.public_method(
           methodSignature(LureConstants.FUNCTION_METHOD_NAME,
-            (Integer)((TypeSpecImpl)node.getType()).getAttribute(TypeKeyImpl.ARITY)));
+            (Integer)((TypeSpecImpl)node.getTypeSpec()).getAttribute(TypeKeyImpl.ARITY)));
       instructor.limit_stack(32);
       instructor.limit_locals(32);
       for (ICodeNode n : node.getChildren()) {
