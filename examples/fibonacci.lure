@@ -1,0 +1,15 @@
+# The obligatory fibonacci sequence.
+last := 1
+next := 1
+seq  := 5
+count := 1
+
+fibonacci :=  while <(count, seq)  do
+                temp := next
+                next := +(last, next)
+                last := temp
+                count := +(count, 1)
+                next
+              end
+
+puts(fibonacci)

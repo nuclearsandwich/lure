@@ -1,0 +1,231 @@
+A brief tour of Lure
+====================
+
+Data types
+----------
+
+Lure currently supports strings delimeted by single quotes.
+
+    'This is a Lure string'
+    'They can span
+    multiple lines'
+
+As well as integers and booleans
+    5
+    true
+    false
+
+Lure's main aggregate construct is a list. Lists are not type specific so there
+could be anything in there. They are created empty and there is no literal for
+a filled list at this time.
+    []
+    [].add('hello')
+    [].remove(0)
+    [].size()
+
+Lure has read-only support for a record type. Records can be used as buckets for
+functions or variables. However no bucket has a concept of self or this so they
+aren't objects without extra work. The main use of records right now is wrapping
+java objects and encapsulating library functions.
+
+Lure data types and their JVM counterparts.
+
+| Lure type |        JVM Object   |
+|-----------|---------------------|
+|  Integer  | java.lang.Integer   |
+|   String  | java.lang.String    |
+|   List    | java.util.ArrayList |
+|   Record  | lure.lang.Record    |
+
+Variables
+---------
+
+Variables in Lure are dynamically typed and can be set multiple times. No
+declaration is needed, it is declared on it's first assignment. If you try to
+use a variable (other than a function parameter) it will generate a compiler
+error.
+
+    greeting := 'hello!'
+    greeting := 99
+
+Condititionals
+--------------
+
+Lure has both a 2-clause and 3-clause conditional. One cool thing, any
+expression can serve as a test, it doesn't need to be a boolean expression. All
+values in Lure are truthy except for the special values nil and false.
+
+    if nine then 9 end
+
+    if maybeNil then
+      maybeNil
+    else
+      'it was nil'
+    end
+
+Oh, and since if-then-else is an expression you can assign or return right from
+it!
+
+    aNonNilValue := if maybeNil then
+                      maybeNil
+                    else
+                      'twas nil'
+                    end
+
+Loops
+-----
+
+Lure's only loop is a while loop but it's a trusty one! It features the same
+test semantics as conditionals. While loops also return the last value
+evaluated on exit so you can use them to build values.
+
+    last := 1
+    next := 1
+    seq  := 5
+    count := 1
+
+    fibonacci :=  while <(count, seq)  do
+                    temp := next
+                    next := +(last, next)
+                    last := temp
+                    count := +(count, 1)
+                    next
+                  end
+
+
+Functions
+---------
+
+Functions in Lure are first class values. You can pass 'em around anywhere you
+like. Functions are invoked by placing parentheses after the variable. Even
+though functions are first class, you need to assign one to a variable name
+before you can invoke it because I was a lazy parser author. Because I hate
+writing `function` There are a number of ways to declare a function literal.
+`fn`, `fun`, `func`, and `->` are all synonyms.  All functions use the
+applicative syntax. Even arithmetic functions like +, -, *, /. A function's last
+expression is its return value. Thus, all functions have a return value.
+
+    addFiveToX := -> (x) {
+      +(x, 5)
+    }
+
+Functions and Scope
+-------------------
+
+I was lazy, so there's no closure over values outside the function at the
+moment.  In, fact if you try to access a value that isn't a global or a
+declared argument, you'll get a compiler error. This is both because I'm lazy,
+but also to force you to write referentially transparent functions.
+
+I know what you're thinking: "but what about recursion?". If you can't
+reference the function's variable name from within it, how do you
+write recursive functions. There's a special symbol defined for
+recursive functions. Check it out.
+
+    factorial := -> (x) {
+      if =(x, 1) then
+        x
+      else
+        *(x, __recur__(-(x, 1)))
+      end
+    }
+
+The Standard Library
+====================
+
+Below is a list of all the functions, records, and values in the standard
+library
+
+## +
+
+  The + function is defined for up to five arguments. If you need more than
+  five, pass a list with all integer values as the only argument.
+
+    +(4, 5) #=> 9
+    nums := []
+    nums.add(1)
+    nums.add(2)
+    nums.add(3)
+    +(nums) #=> 6
+
+## -
+
+  The - function is similar to the plus function. If more than two values are
+  specified then the values are sequentially subtracted from the first.
+
+    -(9, 3, 6) #=> 0
+
+## *
+
+  Identical to the + function but for multiplication.
+
+## /
+
+  Identical to the - function but for integer division.
+
+## =
+
+  The equivalence function compares two numbers, strings, functions, lists, or
+  records. For record or function comparison, the two values must reference the
+  same value. There's no deep comparison.
+
+    identity := fn (x) { x }
+    myId := identity
+    =(4, 5) #=> false
+    =(myId, identity) #=> true
+
+## !=
+
+  The opposite of the equivalence operation.
+
+## >
+
+  Integer greater than comparison.
+
+## >=
+
+  Integer greater than or equal comparison.
+
+## >
+
+  Integer less than comparison.
+
+## <=
+
+  Integer less than or equal comparison.
+
+## and
+
+  Defined for two to five values, evaluates the truthiness of all arguments and
+  returns true if they all are. Note that this does not short circuit since all
+  arguments are evaluated prior to function invocation.
+
+## or
+
+  Same as and but returns true if any argument is truthy. Once again these do
+  not short circuit.
+
+## puts
+
+  Print up to five values to standard out. If multiple arguments are specified
+  they are printed separated by spaces. Each puts ends in a new line.
+
+## str
+
+  The str record contains functions related to string operations.
+
+## str.cat Concatenate two to five strings.
+
+## str.conv Convert a value to a string.
+
+## str.split
+
+    Takes two arguments, a base string and a delimeter and returns a list of
+    strings separated by that delimeter.
+
+## int
+
+  The int record contains functions relating to integers.
+
+## int.parse Attempts to parse a string into an integer.
+

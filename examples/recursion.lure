@@ -1,0 +1,11 @@
+factorial := -> (x) {
+  if =(x, 1) then
+    x
+  else
+    *(x, __recur__(-(x, 1)))
+  end
+}
+
+puts(factorial(5))
+
+
