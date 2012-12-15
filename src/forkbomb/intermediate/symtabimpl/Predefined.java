@@ -92,11 +92,11 @@ public class Predefined {
     lteId = enterBuiltin(symTabStack, "<=", "lure/lang/Globals/lte");
   }
 
-  private static SymTabEntry enterBuiltin(SymTabStack stack, String name, String slug) {
+  private static SymTabEntry enterBuiltin(SymTabStack stack,
+      String name, String fieldSpec)
+  {
     SymTabEntry e = stack.enterLocal(name);
-    e.setDefinition(DefinitionImpl.BUILTIN_FUNCTION);
-    e.setTypeSpec(new TypeSpecImpl(TypeFormImpl.FUNCTION));
-    e.setAttribute(FUNCTION_SLUG, slug);
+    e.setAttribute(GLOBAL_FIELD_SPEC, fieldSpec);
     return e;
   }
 }

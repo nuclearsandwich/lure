@@ -132,20 +132,19 @@ public class LureASTParser implements LureParserVisitor {
 
   public Object visit(ASTFunctionInvocationExpression node, Object data) {
     ICodeNode fun = ICodeFactory.createICodeNode(CALL);
-    SimpleNode funAccess = (SimpleNode)node.jjtGetChild(0);
-    String funName = (String)funAccess.jjtGetValue();
-    SymTabEntry e = symbolTable.lookupLocal(funName);
 
-    if ((e == null) && ((e = symbolTable.lookupGlobal(funName)) == null)) {
-      Mercury.fatal("No known value for identifier " + funName);
-    }
-
-    fun.setAttribute(ICodeKeyImpl.VALUE, e);
-
-    for (int i = 1; i < node.jjtGetNumChildren(); i++) {
+    for (int i = 0; i < node.jjtGetNumChildren(); i++) {
       fun.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
     }
     return fun;
+  }
+
+  public Object visit(ASTAccess node, Object data) {
+    ICodeNode access = ICodeFactory.createICodeNode(ACCESS);
+    for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+      access.addChild((ICodeNode)node.jjtGetChild(i).jjtAccept(this, null));
+    }
+    return access;
   }
 
   public Object visit(ASTVariableAccess node, Object data) {
@@ -157,6 +156,12 @@ public class LureASTParser implements LureParserVisitor {
     }
     access.setAttribute(ICodeKeyImpl.VALUE, e);
     return access;
+  }
+
+  public Object visit(ASTFieldAccess node, Object data) {
+    ICodeNode field = ICodeFactory.createICodeNode(FIELD);
+    field.setAttribute(ICodeKeyImpl.VALUE, node.jjtGetValue());
+    return field;
   }
 
   private String getNextFunctionClass() {

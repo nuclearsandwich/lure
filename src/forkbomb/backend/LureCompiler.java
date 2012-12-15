@@ -67,6 +67,12 @@ public class LureCompiler {
         case LOOP:
           generateLoop();
           return;
+        case ACCESS:
+          generateAccess();
+          return;
+        case FIELD:
+          generateField();
+          return;
         case NEWARRAY:
           generateNewArray();
           return;
@@ -108,37 +114,34 @@ public class LureCompiler {
       instructor.astore(e.getIndex());
     }
 
+    private void generateAccess() {
+      for (ICodeNode n : node.getChildren()) {
+        (new Generator(n)).generate();
+      }
+    }
+
     private void generateVariable() {
       SymTabEntry e = (SymTabEntry)node.getAttribute(VALUE);
 
       if (e.isGlobal()) {
         Mercury.warn("Globals not yet supported, loading null");
-        instructor.aload_null();
+        instructor.getstatic((String)e.getAttribute(SymTabKeyImpl.GLOBAL_FIELD_SPEC),
+            "Ljava/lang/Object;");
       } else {
         instructor.aload(e.getIndex());
       }
     }
 
     private void generateCall() {
-      SymTabEntry e = (SymTabEntry)node.getAttribute(VALUE);
+      ICodeNode functionValue = node.getChildren().remove(0);
+      (new Generator(functionValue)).generate();
+
       int arity = node.getChildren().size();
-      /* Check if user defined or global and invoke virtual or static
-       * accordingly.
-       */
-      if (e.isGlobal()) {
-        for (ICodeNode arg : node.getChildren()) {
-          (new Generator(arg)).generate();
-        }
-        instructor.invokestatic(
-          methodSignature((String)e.getAttribute(SymTabKeyImpl.FUNCTION_SLUG), arity));
-      } else {
-        instructor.aload(e.getIndex());
-        for (ICodeNode arg : node.getChildren()) {
-          (new Generator(arg)).generate();
-        }
-        instructor.invokevirtual(
-            methodSignature(LureConstants.FUNCTION_CALL_SLUG, arity));
+      for (ICodeNode arg : node.getChildren()) {
+        (new Generator(arg)).generate();
       }
+      instructor.invokevirtual(
+          methodSignature(LureConstants.FUNCTION_CALL_SLUG, arity));
     }
 
     private void generateFunction() {
@@ -213,6 +216,11 @@ public class LureCompiler {
       instructor.label(endLabel);
     }
 
+    public void generateField() {
+      instructor.ldc((String)node.getAttribute(VALUE));
+      instructor.invokeinterface(LureConstants.OBJECT_GET_SPEC);
+    }
+
     public void generateNewArray() {
       instructor._new("java/util/ArrayList");
       instructor.dup();
@@ -235,5 +243,5 @@ public class LureCompiler {
       return String.format(LABEL_FORMAT, globalLabeCounter++);
     }
   }
-      private static final String LABEL_FORMAT = "L%03d";
+  private static final String LABEL_FORMAT = "L%03d";
 }
