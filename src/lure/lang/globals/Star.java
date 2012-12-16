@@ -3,8 +3,8 @@ package lure.lang.globals;
 import lure.lang.List;
 
 public class Star extends lure.lang.Function {
-  public Object call(lure.lang.List args) {
-    java.util.ArrayList a = args.getArrayList();
+  public Object call(Object args) {
+    java.util.ArrayList a = ((List)args).getArrayList();
     int total = 1;
     for (int i = 0; i < a.size(); i++) {
       total *= ((Integer)a.get(i));

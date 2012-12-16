@@ -4,8 +4,8 @@ import lure.lang.List;
 
 public class Minus extends lure.lang.Function {
 
-  public Object call(lure.lang.List args) {
-    java.util.ArrayList a = args.getArrayList();
+  public Object call(Object args) {
+    java.util.ArrayList a = ((List)args).getArrayList();
     int total = (Integer)a.get(0);
     for (int i = 1; i < a.size(); i++) {
       total -= ((Integer)a.get(i));

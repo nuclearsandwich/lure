@@ -6,7 +6,7 @@ import lure.lang.List;
 public class Plus extends lure.lang.Function {
 
   public Object call(Object args) {
-    java.util.ArrayList a = ((lure.lang.List)args).getArrayList();
+    java.util.ArrayList a = ((List)args).getArrayList();
     int total = 0;
     for (int i = 0; i < a.size(); i++) {
       total += ((Integer)a.get(i));
