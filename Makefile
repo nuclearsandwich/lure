@@ -6,7 +6,7 @@ src/forkbomb/frontend/Lure.jj: Lure.jjt
 
 build: clean parser
 	mkdir bin
-	find src -name '*.java' | xargs javac -d bin
+	find src -name '*.java' | xargs javac -cp bin:'lib/*' -d bin
 
 clean:
 	rm -rf bin

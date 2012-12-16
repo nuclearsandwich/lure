@@ -1,8 +1,8 @@
 # Greet an individual by name.
-get('/hello', -> (request, response) {
+web.get('/hello', -> (request, response) {
   name := request.queryParams('name')
   response.status(200)
-  strcat('<p>Hello, ',
+  str.cat('<p>Hello, ',
          name,
          '!</p>')
 })

@@ -4,4 +4,4 @@ export LUREPATH=out
 
 java -cp bin forkbomb.frontend.LureParser $1 || exit 1
 jasmin out/*.j -d bin || exit 1
-java -${VERIFY:-'noverify'} -cp bin LureMain || exit 1
+java -${VERIFY:-'noverify'} -cp bin:'lib/*' LureMain || exit 1
