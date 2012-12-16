@@ -24,6 +24,8 @@ false.
 5. It has no compile-time type checking because the rest of my group bailed on
 me and I ran out of time.
 
+6. Oh, and it has a built in web server via the [Spark][] web framework!
+
 Building It
 ----------
 
@@ -64,7 +66,7 @@ the standard library.
 
 Now run the LureMain class and watch the magic happen!
 
-    java -cp bin LureMain
+    java -cp bin:'lib/*' LureMain
 
 Inside It
 ---------
@@ -88,4 +90,13 @@ redeemingly crass features like a curse word for a name or a politeness
 requirement. It will probably collect dust, or serve as a toy for me to
 generate other backends. If you actually want to use this for anything... tell
 me why?
+
+Credits
+-------
+
+Lure was written by @nuclearsandwich with some sources and interfaces defined in
+[Writing Compilers and Interpreters][wci] by Ron Mak.
+
+[wci]: http://www.amazon.com/Writing-Compilers-Interpreters-Software-Engineering/dp/0470177071/ref=sr_1_2
+[Spark]: http://sparkjava.com
 
