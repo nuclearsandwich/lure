@@ -41,6 +41,7 @@ public class Predefined {
   public static SymTabEntry lteId;
   public static SymTabEntry strId;
   public static SymTabEntry intId;
+  public static SymTabEntry webId;
   public static SymTabEntry orId;
   public static SymTabEntry andId;
 
@@ -68,6 +69,7 @@ public class Predefined {
     trueId = enterBuiltin(symTabStack, "nil", "lure/lang/Globals/_null");
     intId = enterBuiltin(symTabStack, "int", "lure/lang/Globals/_int");
     intId = enterBuiltin(symTabStack, "str", "lure/lang/Globals/str");
+    webId = enterBuiltin(symTabStack, "web", "lure/lang/Globals/web");
     orId = enterBuiltin(symTabStack, "and", "lure/lang/Globals/and");
     andId = enterBuiltin(symTabStack, "or", "lure/lang/Globals/or");
   }
