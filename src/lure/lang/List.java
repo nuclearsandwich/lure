@@ -32,6 +32,12 @@ public class List implements LureObject {
         return list.size();
       }
     });
+    map.put("clear", new Function() {
+      public Object call() {
+        list.clear();
+        return null;
+      }
+    });
   }
 
   public String toString() {
