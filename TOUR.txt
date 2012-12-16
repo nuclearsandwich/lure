@@ -229,3 +229,22 @@ library
 
 ## int.parse Attempts to parse a string into an integer.
 
+## web
+
+  The web record contains functions that use the Spark web framework for
+  generating web services.
+
+## web.get, web.post, web.put, web.delete
+  Each of these corresponds to an HTTP method. The functions take a route name
+  and a binary function callback.
+
+    web.get('/hello', -> (request, response) {
+      name := request.queryParams('name')
+      response.status(200)
+      str.cat('<p>Hello, ',
+             name,
+             '!</p>')
+    })
+
+## web.setPort
+  the integer port that the server should run on. Defaults to 4567
